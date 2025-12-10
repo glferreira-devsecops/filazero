@@ -1,4 +1,4 @@
-import { CheckCircle, Clock, LayoutDashboard, Megaphone, Monitor, Play, QrCode, RefreshCw, User, X } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Clock, LayoutDashboard, Megaphone, Monitor, Play, QrCode, RefreshCw, User, UserX, X } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -68,6 +68,17 @@ export default function Reception() {
         } catch (e) {
             console.error(e);
             addToast('Erro ao marcar no-show', 'error');
+        }
+    };
+
+    // Handle recall - call the patient again
+    const handleRecall = async (ticketId) => {
+        try {
+            await updateTicketStatus(clinicId, ticketId, 'called');
+            addToast('📢 Paciente chamado novamente!', 'info');
+        } catch (e) {
+            console.error(e);
+            addToast('Erro ao rechamar', 'error');
         }
     };
 
@@ -229,10 +240,10 @@ export default function Reception() {
                                             <div className="flex items-center gap-3">
                                                 <h3 className="text-2xl font-bold text-white m-0">#{ticket.number}</h3>
                                                 <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider border ${isOverdue
-                                                        ? 'bg-red-500/20 text-red-400 border-red-500/20'
-                                                        : ticket.status === 'called'
-                                                            ? 'bg-amber-500/20 text-amber-400 border-amber-500/20'
-                                                            : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20'
+                                                    ? 'bg-red-500/20 text-red-400 border-red-500/20'
+                                                    : ticket.status === 'called'
+                                                        ? 'bg-amber-500/20 text-amber-400 border-amber-500/20'
+                                                        : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20'
                                                     }`}>
                                                     {isOverdue ? 'AGUARDANDO' : (ticket.status === 'called' ? 'CHAMANDO' : 'ATENDENDO')}
                                                 </span>
@@ -258,6 +269,13 @@ export default function Reception() {
                                                         title="Não Compareceu"
                                                     >
                                                         <UserX size={20} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleRecall(ticket.id)}
+                                                        className="p-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 hover:text-amber-300 border border-amber-500/20 transition-all active:scale-95"
+                                                        title="Chamar Novamente"
+                                                    >
+                                                        <Repeat2 size={20} />
                                                     </button>
                                                     <button
                                                         onClick={() => handleStatusChange(ticket.id, 'in_service')}

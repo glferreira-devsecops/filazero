@@ -705,7 +705,7 @@ If you're interested in acquiring FilaZero Saúde:
 
 ## 📄 License
 
-**Proprietary License** - Copyright © 2025 Gabriel L. Ferreira
+**Proprietary License** - Copyright © 2025 Gabriel Lima Ferreira
 
 This software is proprietary and confidential. Unauthorized copying, distribution, or modification is strictly prohibited without express written permission.
 
@@ -715,7 +715,7 @@ For acquisition inquiries, contact: [LinkedIn](https://www.linkedin.com/in/devfe
 
 ## 🏅 Credits
 
-**Developed by**: Gabriel L. Ferreira
+**Developed by**: Gabriel Lima Ferreira
 **Role**: Senior Software Engineer & Product Architect
 **Experience**: 15+ years software engineering, healthcare SaaS expertise
 

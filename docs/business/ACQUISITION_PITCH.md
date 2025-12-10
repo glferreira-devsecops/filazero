@@ -535,7 +535,7 @@ See [VALUATION.md](./VALUATION.md) for detailed analysis.
 
 ## 🤝 Contact & Acquisition Inquiry
 
-**Seller**: Gabriel L. Ferreira
+**Seller**: Gabriel Lima Ferreira
 **LinkedIn**: [linkedin.com/in/devferreirag/](https://www.linkedin.com/in/devferreirag/)
 **Email**: <devferreirag@email.com> (via LinkedIn)
 

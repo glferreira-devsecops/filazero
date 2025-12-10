@@ -219,7 +219,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## License
 
-**Proprietary** - Copyright © 2024-2025 Gabriel L. Ferreira
+**Proprietary** - Copyright © 2024-2025 Gabriel Lima Ferreira
 
 For acquisition or licensing inquiries, contact via [LinkedIn](https://www.linkedin.com/in/devferreirag/).
 

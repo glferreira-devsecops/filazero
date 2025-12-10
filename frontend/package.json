@@ -1,0 +1,38 @@
+{
+  "name": "filazero-saude",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Modern healthcare queue management SaaS - Real-time digital queue orchestration for clinics",
+  "author": "Gabriel L. Ferreira <https://linkedin.com/in/devferreirag>",
+  "license": "UNLICENSED",
+  "keywords": [
+    "healthcare",
+    "queue-management",
+    "saas",
+    "react",
+    "pocketbase",
+    "real-time"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/filazero-saude"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lucide-react": "^0.460.0",
+    "pocketbase": "^0.21.5",
+    "qrcode.react": "^4.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.3",
+    "vite": "^5.4.11"
+  }
+}

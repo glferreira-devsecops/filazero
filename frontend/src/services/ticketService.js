@@ -3,13 +3,36 @@ import pb from './pocketbase';
 // Flag to use mock storage when PocketBase is not available
 let USE_MOCK = false;
 
-// Check PocketBase connection on load
-pb.health.check().catch(() => {
-    console.warn('PocketBase not available, using mock mode');
+// Auto-enable mock mode on Vercel deployments (no PocketBase backend)
+if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
+    console.log('🎭 Demo mode: Vercel deployment detected, using mock storage');
     USE_MOCK = true;
-});
+}
 
-// --- Mock Storage Helpers ---
+// Check PocketBase availability safely (only if not already in mock mode)
+if (!USE_MOCK) {
+    (async () => {
+        try {
+            const url = import.meta.env.VITE_POCKETBASE_URL || 'http://127.0.0.1:8090';
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+            const response = await fetch(`${url}/api/health`, {
+                method: 'GET',
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+
+            if (!response.ok) throw new Error('PocketBase not healthy');
+            console.log('✅ PocketBase connected at', url);
+        } catch (e) {
+            console.warn('⚠️ PocketBase not available, using mock mode');
+            USE_MOCK = true;
+        }
+    })();
+}
+
+
 const getMockDb = () => JSON.parse(localStorage.getItem('filaZeroMockDb') || '{"queues": {}}');
 const saveMockDb = (data) => localStorage.setItem('filaZeroMockDb', JSON.stringify(data));
 

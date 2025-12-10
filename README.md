@@ -141,13 +141,19 @@ npm install && npm run dev
 
 <div align="center">
 
-### 📞 Contact / Contato
+### 👨‍💻 Developed by / Desenvolvido por
 
-**Gabriel Lima Ferreira** - Full-Stack .NET Developer
+**Gabriel Lima Ferreira** *(He/Him)*
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/devferreirag/)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contato.ferreirag@outlook.com)
+*Full-Stack .Net Developer | React, Node.js & AWS*
+*Clean Code & Open-Source | Back End | LATAM | Remote*
 
-*For acquisition inquiries, please contact via LinkedIn or Email.*
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/devferreirag/)
+[![Email](https://img.shields.io/badge/Email-Contact_Me-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contato.ferreirag@outlook.com)
+[![GitHub](https://img.shields.io/badge/GitHub-Profile-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/glferreira-devsecops)
+
+<br />
+
+*"Building scalable solutions for real-world problems."*
 
 </div>

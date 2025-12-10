@@ -12,7 +12,6 @@ import TicketStatus from './pages/TicketStatus';
 import { ToastProvider } from './context/ToastContext';
 
 import ErrorBoundary from './components/ErrorBoundary';
-import { isDemoMode } from './utils/demoUtils';
 
 function App() {
   return (
@@ -44,8 +43,8 @@ function App() {
               } />
             </Routes>
 
-            {/* Demo Mode Indicator */}
-            <DemoModeBadge visible={isDemoMode()} />
+            {/* Demo Mode Indicator - only visible when logged as guest */}
+            <DemoModeBadge />
           </Router>
         </ToastProvider>
       </AuthProvider>

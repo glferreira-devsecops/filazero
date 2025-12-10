@@ -1,8 +1,7 @@
-import { Expand, Minimize, Volume2, VolumeX } from 'lucide-react';
+import { Activity, Clock, Expand, Minimize, QrCode, Volume2, VolumeX } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { subscribeToQueue } from '../services/ticketService';
-
 import { useAuth } from '../context/AuthContext';
+import { subscribeToQueue } from '../services/ticketService';
 
 export default function RoomPanel() {
     const { currentUser } = useAuth();
@@ -84,195 +83,143 @@ export default function RoomPanel() {
     const formatDate = (date) => date.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
 
     return (
-        <div style={{
-            height: '100vh',
-            padding: '2rem',
-            boxSizing: 'border-box',
-            background: 'linear-gradient(135deg, #0f172a, #1e293b)',
-            overflow: 'hidden',
-            position: 'relative'
-        }}>
-            <div style={{
-                position: 'absolute',
-                top: '-50%',
-                left: '-50%',
-                width: '200%',
-                height: '200%',
-                background: 'radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 50%)',
-                animation: 'rotate 60s linear infinite',
-                pointerEvents: 'none'
-            }} />
-            {/* Top Bar */}
-            <div className="flex-between" style={{ marginBottom: '2rem' }}>
-                <div style={{ color: 'white' }}>
-                    <h2 style={{ margin: 0, opacity: 0.9 }}>🏥 FilaZero Saúde</h2>
-                    <p style={{ margin: 0, opacity: 0.6, fontSize: '0.9rem' }}>{formatDate(currentTime)}</p>
-                </div>
-                <div className="flex-center gap-md">
-                    <div className="clock" style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', fontSize: '1.5rem' }}>
-                        {formatTime(currentTime)}
-                    </div>
-                    {/* Voice Test Button (Hidden unless hovered/active to keep clean) */}
-                    <button
-                        onClick={() => announceTicket("Teste")}
-                        className="btn btn-icon"
-                        style={{ background: 'rgba(255,255,255,0.1)', color: 'white' }}
-                        title="Testar Voz Agora"
-                    >
-                        <span style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>TEST</span>
-                    </button>
+        <div className="h-screen w-screen overflow-hidden bg-[#0a0f1c] text-slate-50 relative flex flex-col p-8 font-sans">
 
-                    <button
-                        onClick={() => setVoiceEnabled(!voiceEnabled)}
-                        className="btn btn-icon"
-                        style={{ background: 'rgba(255,255,255,0.1)', color: 'white' }}
-                        title={voiceEnabled ? 'Desativar voz' : 'Ativar voz'}
-                    >
-                        {voiceEnabled ? <Volume2 size={24} /> : <VolumeX size={24} />}
-                    </button>
-                    <button
-                        onClick={toggleFullscreen}
-                        className="btn btn-icon"
-                        style={{ background: 'rgba(255,255,255,0.1)', color: 'white' }}
-                        title="Tela cheia"
-                    >
-                        {isFullscreen ? <Minimize size={24} /> : <Expand size={24} />}
-                    </button>
-                </div>
+            {/* Ambient Background */}
+            <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                <div className="absolute -top-[50%] -left-[50%] w-[200%] h-[200%] bg-[radial-gradient(circle,rgba(16,185,129,0.03)_0%,transparent_50%)] animate-[spin_60s_linear_infinite]"></div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', height: 'calc(100% - 100px)', gap: '2rem' }}>
-                {/* Main Focus */}
-                <div
-                    className="card glass flex-center flex-col"
-                    style={{
-                        background: 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9))',
-                        border: '6px solid var(--primary)',
-                        boxShadow: calledTicket ? 'var(--shadow-glow)' : 'var(--shadow-lg)'
-                    }}
-                >
-                    <h2 style={{
-                        fontSize: 'clamp(2rem, 4vw, 3rem)',
-                        color: 'var(--text-muted)',
-                        margin: 0,
-                        letterSpacing: '0.1em'
-                    }}>
-                        SENHA ATUAL
-                    </h2>
+            {/* Top Bar */}
+            <header className="relative z-10 flex items-center justify-between mb-8 pb-6 border-b border-white/5">
+                <div className="flex items-center gap-4">
+                    <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                        <Activity size={32} />
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-bold text-white tracking-tight uppercase">FilaZero Saúde</h1>
+                        <p className="text-slate-400 text-sm font-medium capitalize">{formatDate(currentTime)}</p>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-white/5 border border-white/5 shadow-inner">
+                        <Clock size={24} className="text-emerald-400" />
+                        <span className="text-3xl font-mono font-bold text-white tracking-widest">{formatTime(currentTime)}</span>
+                    </div>
+
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => announceTicket("Teste")}
+                            className="p-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all"
+                            title="Testar Voz"
+                        >
+                            <span className="text-xs font-bold uppercase">Test</span>
+                        </button>
+                        <button
+                            onClick={() => setVoiceEnabled(!voiceEnabled)}
+                            className="p-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all"
+                            title={voiceEnabled ? 'Desativar voz' : 'Ativar voz'}
+                        >
+                            {voiceEnabled ? <Volume2 size={24} /> : <VolumeX size={24} />}
+                        </button>
+                        <button
+                            onClick={toggleFullscreen}
+                            className="p-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all"
+                            title="Tela cheia"
+                        >
+                            {isFullscreen ? <Minimize size={24} /> : <Expand size={24} />}
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            {/* Main Content Info */}
+            <main className="relative z-10 flex-1 grid grid-cols-[1.8fr_1fr] gap-8 h-full">
+
+                {/* Main Focus Card (Current Ticket) */}
+                <div className={`relative rounded-[2.5rem] flex flex-col items-center justify-center border-4 shadow-2xl overflow-hidden transition-all duration-500 ${calledTicket ? 'border-emerald-500 bg-white shadow-emerald-500/20' : 'border-white/5 bg-white/[0.02]'}`}>
 
                     {calledTicket ? (
                         <>
-                            <h1
-                                className="animate-scaleIn"
-                                style={{
-                                    fontSize: 'clamp(8rem, 20vw, 18rem)',
-                                    margin: 0,
-                                    lineHeight: 1,
-                                    background: 'var(--bg-hero)',
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent',
-                                    fontWeight: 800,
-                                    textShadow: '0 0 50px rgba(34, 197, 94, 0.5)',
-                                    animation: 'pulseGlow 2s infinite'
-                                }}
-                            >
+                            <div className="absolute inset-x-0 top-0 h-2 bg-emerald-500"></div>
+                            <h2 className="text-2xl md:text-4xl font-black tracking-[0.2em] text-slate-400 uppercase mb-4">Senha Atual</h2>
+
+                            <h1 className="text-[12rem] md:text-[16rem] leading-none font-black text-slate-900 tracking-tighter animate-scaleIn drop-shadow-2xl">
                                 {calledTicket.number}
                             </h1>
-                            <h3 style={{
-                                fontSize: 'clamp(1.5rem, 3vw, 2.5rem)',
-                                color: 'var(--text-main)',
-                                margin: '1rem 0'
-                            }}>
-                                GUICHÊ 01
-                            </h3>
-                            <div
-                                className="animate-pulse"
-                                style={{
-                                    padding: '1rem 3rem',
-                                    background: 'linear-gradient(135deg, #22c55e, #16a34a)',
-                                    color: 'white',
-                                    borderRadius: '50px',
-                                    fontSize: 'clamp(1.25rem, 2.5vw, 2rem)',
-                                    fontWeight: 'bold'
-                                }}
-                            >
-                                CHAMANDO
+
+                            <div className="mt-8 flex flex-col items-center gap-4">
+                                <h3 className="text-4xl font-bold text-slate-600 uppercase tracking-widest">Guichê 01</h3>
+                                <div className="px-12 py-4 rounded-full bg-emerald-500 text-white text-3xl font-black uppercase tracking-wider animate-pulse shadow-xl shadow-emerald-500/30">
+                                    Chamando
+                                </div>
                             </div>
+
+                            {/* Decorative Background Elements */}
+                            <div className="absolute -right-20 -bottom-20 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                            <div className="absolute -left-20 -top-20 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
                         </>
                     ) : (
-                        <div className="flex-col flex-center gap-md animate-float">
-                            <h1 style={{
-                                fontSize: 'clamp(4rem, 10vw, 8rem)',
-                                color: 'var(--text-muted)',
-                                opacity: 0.3,
-                                margin: 0
-                            }}>
-                                ---
-                            </h1>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '1.25rem' }}>
-                                Aguardando próxima chamada...
-                            </p>
+                        <div className="flex flex-col items-center justify-center opacity-30 animate-pulse">
+                            <span className="text-[8rem] font-black text-slate-600">---</span>
+                            <p className="text-2xl font-medium text-slate-500 uppercase tracking-widest mt-4">Aguardando Próxima Chamada...</p>
                         </div>
                     )}
                 </div>
 
-                {/* Sidebar List */}
-                <div className="flex-col gap-md">
-                    <div
-                        className="card"
-                        style={{
-                            height: '100%',
-                            background: 'rgba(255,255,255,0.05)',
-                            backdropFilter: 'blur(10px)',
-                            border: '1px solid rgba(255,255,255,0.1)',
-                            color: 'white',
-                            display: 'flex',
-                            flexDirection: 'column'
-                        }}
-                    >
-                        <h3
-                            className="text-center"
-                            style={{
-                                borderBottom: '1px solid rgba(255,255,255,0.1)',
-                                paddingBottom: '1rem',
-                                margin: '0 0 1rem 0',
-                                letterSpacing: '0.05em'
-                            }}
-                        >
-                            ÚLTIMOS CHAMADOS
+                {/* Sidebar (History) */}
+                <div className="flex flex-col gap-6">
+                    <div className="flex-1 rounded-3xl bg-white/[0.03] border border-white/5 backdrop-blur-xl p-6 flex flex-col overflow-hidden">
+                        <h3 className="text-xl font-bold text-slate-200 uppercase tracking-widest border-b border-white/5 pb-4 mb-4 flex items-center gap-3">
+                            <Clock size={24} className="text-emerald-500" />
+                            Últimos Chamados
                         </h3>
-                        <div className="flex-col gap-sm" style={{ flex: 1, overflowY: 'auto' }}>
+
+                        <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
                             {history.length === 0 && (
-                                <p className="text-center" style={{ opacity: 0.5, marginTop: '2rem' }}>
-                                    Nenhum chamado recente
-                                </p>
+                                <div className="h-full flex items-center justify-center opacity-30">
+                                    <p className="text-center font-medium">Nenhum histórico recente</p>
+                                </div>
                             )}
+
                             {history.map((t, i) => (
                                 <div
                                     key={t.id}
-                                    className="flex-between"
+                                    className="flex items-center justify-between p-5 rounded-2xl bg-white/[0.05] border border-white/5 animate-slideUp"
                                     style={{
-                                        padding: '1rem 1.25rem',
-                                        background: 'rgba(255,255,255,0.08)',
-                                        borderRadius: 'var(--radius-md)',
-                                        opacity: 1 - (i * 0.15)
+                                        opacity: Math.max(0.4, 1 - (i * 0.15)),
+                                        animationDelay: `${i * 0.1}s`
                                     }}
                                 >
-                                    <span style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 'bold' }}>
+                                    <span className="text-4xl font-black text-white tracking-tight">
                                         {t.number}
                                     </span>
                                     <span
-                                        className={`badge ${t.status === 'in_service' ? 'badge-service' : 'badge-waiting'}`}
-                                        style={{ fontSize: '0.7rem' }}
+                                        className={`px-3 py-1 rounded text-xs font-bold uppercase tracking-wider ${t.status === 'in_service'
+                                                ? 'bg-blue-500/20 text-blue-400'
+                                                : 'bg-amber-500/20 text-amber-400'
+                                            }`}
                                     >
-                                        {t.status === 'in_service' ? 'ATENDENDO' : 'AGUARDANDO'}
+                                        {t.status === 'in_service' ? 'Atendendo' : 'Aguardando'}
                                     </span>
                                 </div>
                             ))}
                         </div>
                     </div>
+
+                    {/* Clinic QR */}
+                    <div className="p-6 rounded-3xl bg-emerald-900/10 border border-emerald-500/10 flex items-center justify-between">
+                        <div>
+                            <p className="text-emerald-400 text-xs font-bold uppercase tracking-wider mb-1">Escaneie para entrar</p>
+                            <h4 className="text-xl font-bold text-white">Fila Digital</h4>
+                        </div>
+                        <div className="p-2 bg-white rounded-xl">
+                            <QrCode size={48} className="text-slate-900" />
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </main>
         </div>
     );
 }

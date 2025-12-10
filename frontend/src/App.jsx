@@ -11,9 +11,19 @@ import TicketStatus from './pages/TicketStatus';
 
 import { ToastProvider } from './context/ToastContext';
 
+import { useEffect } from 'react';
 import ErrorBoundary from './components/ErrorBoundary';
+import { isDemoMode, preSeedDemoData } from './utils/demoUtils';
 
 function App() {
+  // Auto-seed demo data on first load (only in demo mode)
+  useEffect(() => {
+    if (isDemoMode()) {
+      preSeedDemoData('guest');
+      preSeedDemoData('demo');
+    }
+  }, []);
+
   return (
     <ErrorBoundary>
       <AuthProvider>

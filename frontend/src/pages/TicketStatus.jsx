@@ -3,9 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { createTicket, getQueuePosition, removeTicket, subscribeToTicket } from '../services/ticketService';
+import { sanitizeClinicId } from '../utils/security';
 
 export default function TicketStatus() {
-    const { clinicId } = useParams();
+    const { clinicId: rawClinicId } = useParams();
+    const clinicId = sanitizeClinicId(rawClinicId); // Sanitize URL param
+
     const [ticket, setTicket] = useState(null);
     const [position, setPosition] = useState(null);
     const [loading, setLoading] = useState(false);

@@ -3,6 +3,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
+import { sanitizeClinicId } from '../utils/security';
 
 export default function Landing() {
     const [clinicId, setClinicId] = useState('');
@@ -13,12 +14,13 @@ export default function Landing() {
 
     const handleJoin = async (e) => {
         e.preventDefault();
-        if (!clinicId.trim()) return;
+        const sanitized = sanitizeClinicId(clinicId);
+        if (!sanitized) return;
 
         setLoading(true);
         try {
-            await new Promise(r => setTimeout(r, 800)); // Dramatic loadings
-            navigate(`/clinic/${clinicId.trim().toLowerCase()}`);
+            await new Promise(r => setTimeout(r, 800)); // Dramatic loading
+            navigate(`/clinic/${sanitized}`);
         } catch (error) {
             console.error(error);
             addToast("Erro", "error");

@@ -1,4 +1,5 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import DemoModeBadge from './components/DemoModeBadge';
 import RequireAuth from './components/RequireAuth';
 import { AuthProvider } from './context/AuthContext';
 import Dashboard from './pages/Dashboard';
@@ -11,6 +12,7 @@ import TicketStatus from './pages/TicketStatus';
 import { ToastProvider } from './context/ToastContext';
 
 import ErrorBoundary from './components/ErrorBoundary';
+import { isDemoMode } from './utils/demoUtils';
 
 function App() {
   return (
@@ -41,6 +43,9 @@ function App() {
                 </RequireAuth>
               } />
             </Routes>
+
+            {/* Demo Mode Indicator */}
+            <DemoModeBadge visible={isDemoMode()} />
           </Router>
         </ToastProvider>
       </AuthProvider>

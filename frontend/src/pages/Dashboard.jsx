@@ -62,11 +62,11 @@ export default function Dashboard() {
     const maxValue = Math.max(...hourlyData.map(d => d.value), 10); // Min scale of 10
 
     const handleGenerateDemo = async () => {
-        if (!window.confirm("Gerar 5 tickets de teste?")) return;
+        if (!window.confirm("Gerar 5 tickets com nomes brasileiros realistas?")) return;
         setLoading(true);
         try {
             for (let i = 0; i < 5; i++) {
-                await createTicket(clinicId, `Paciente ${i + 1}`);
+                await createTicket(clinicId); // Will auto-generate Brazilian names
             }
             addToast("✅ 5 tickets gerados com sucesso!", "success");
         } catch (e) {
@@ -75,6 +75,14 @@ export default function Dashboard() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleReloadDemo = () => {
+        if (!window.confirm("Recarregar demo com dados frescos?")) return;
+        localStorage.removeItem('filaZeroMockDb');
+        sessionStorage.removeItem('filaZeroSeeded');
+        addToast("🔄 Demo recarregado!", "success");
+        setTimeout(() => window.location.reload(), 500);
     };
 
     const handleClearData = () => {
@@ -237,6 +245,13 @@ export default function Dashboard() {
                                 >
                                     {loading ? <RefreshCw size={18} className="animate-spin" /> : <TrendingUp size={18} className="text-emerald-400" />}
                                     {loading ? 'Gerando...' : 'Gerar 5 Tickets Demo'}
+                                </button>
+                                <button
+                                    onClick={handleReloadDemo}
+                                    className="w-full py-3 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 text-blue-300 font-medium transition-all flex items-center justify-center gap-2"
+                                >
+                                    <RefreshCw size={18} />
+                                    Recarregar Demo
                                 </button>
                                 <button
                                     onClick={handleClearData}

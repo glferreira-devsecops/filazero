@@ -77,18 +77,18 @@ export const createTicket = async (clinicId, patientName = '') => {
 
         const now = new Date();
         const ticket = {
-            id: 'mock_' + Date.now(),
-            number: dbStr.queues[clinicId].length + 1, // Mock calculates number
+            id: 'mock_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+            number: dbStr.queues[clinicId].length + 1,
             status: 'waiting',
             clinicId,
-            patientName,
+            patientName: patientName || generateBrazilianName(),
             createdAt: now,
             channel: 'web'
         };
 
         dbStr.queues[clinicId].push(ticket);
         saveMockDb(dbStr);
-        await new Promise(r => setTimeout(r, 300));
+        await new Promise(r => setTimeout(r, 200));
         return ticket;
     }
 

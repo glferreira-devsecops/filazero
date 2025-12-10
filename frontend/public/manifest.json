@@ -1,0 +1,27 @@
+{
+    "name": "FilaZero Saúde",
+    "short_name": "FilaZero",
+    "description": "Sistema de gestão de filas inteligente para clínicas e hospitais",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0f172a",
+    "theme_color": "#0f172a",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": [
+        "health",
+        "medical",
+        "business"
+    ],
+    "lang": "pt-BR",
+    "dir": "ltr",
+    "scope": "/",
+    "prefer_related_applications": false
+}

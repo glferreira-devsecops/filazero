@@ -1,3 +1,4 @@
+import { generateBrazilianName } from '../utils/demoUtils';
 import pb from './pocketbase';
 
 // Flag to use mock storage when PocketBase is not available

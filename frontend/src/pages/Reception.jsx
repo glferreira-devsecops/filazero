@@ -53,6 +53,24 @@ export default function Reception() {
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };
 
+    // Calculate how long since ticket was called
+    const getCalledDuration = (calledAt) => {
+        if (!calledAt) return 0;
+        const diff = currentTime - new Date(calledAt);
+        return Math.floor(diff / 60000); // minutes
+    };
+
+    // Handle no-show
+    const handleNoShow = async (ticketId) => {
+        try {
+            await updateTicketStatus(clinicId, ticketId, 'no_show');
+            addToast('❌ Paciente marcado como não compareceu', 'warning');
+        } catch (e) {
+            console.error(e);
+            addToast('Erro ao marcar no-show', 'error');
+        }
+    };
+
     return (
         <div className="min-h-screen bg-[#0f172a] text-slate-50 font-sans p-6 pb-24">
             <div className="container max-w-7xl mx-auto space-y-8">
@@ -185,56 +203,82 @@ export default function Reception() {
                                     <p className="font-medium">Nenhum atendimento ativo</p>
                                 </div>
                             )}
-                            {activeTickets.map(ticket => (
-                                <div
-                                    key={ticket.id}
-                                    className="relative flex items-center justify-between p-5 rounded-2xl bg-[#1e293b]/50 border transition-all overflow-hidden"
-                                    style={{
-                                        borderColor: ticket.status === 'called' ? 'rgba(245, 158, 11, 0.5)' : 'rgba(16, 185, 129, 0.5)'
-                                    }}
-                                >
-                                    {ticket.status === 'called' && (
-                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-amber-500 animate-pulse"></div>
-                                    )}
-                                    {ticket.status === 'in_service' && (
-                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-emerald-500"></div>
-                                    )}
+                            {activeTickets.map(ticket => {
+                                const calledMins = getCalledDuration(ticket.calledAt);
+                                const isOverdue = ticket.status === 'called' && calledMins >= 3;
 
-                                    <div className="pl-3">
-                                        <div className="flex items-center gap-3">
-                                            <h3 className="text-2xl font-bold text-white m-0">#{ticket.number}</h3>
-                                            <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider border ${ticket.status === 'called'
-                                                ? 'bg-amber-500/20 text-amber-400 border-amber-500/20'
-                                                : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20'
-                                                }`}>
-                                                {ticket.status === 'called' ? 'CHAMANDO' : 'ATENDENDO'}
-                                            </span>
-                                        </div>
-                                        <p className="text-xs text-slate-400 mt-1">
-                                            {ticket.calledAt && `Iniciado às ${formatTime(new Date(ticket.calledAt))}`}
-                                        </p>
-                                    </div>
-
-                                    <div className="flex items-center gap-2">
-                                        {ticket.status === 'called' && (
-                                            <button
-                                                onClick={() => handleStatusChange(ticket.id, 'in_service')}
-                                                className="p-3 rounded-xl bg-blue-500 hover:bg-blue-400 text-white shadow-lg shadow-blue-500/20 transition-all active:scale-95"
-                                                title="Iniciar Atendimento"
-                                            >
-                                                <Play size={20} fill="currentColor" />
-                                            </button>
+                                return (
+                                    <div
+                                        key={ticket.id}
+                                        className={`relative flex items-center justify-between p-5 rounded-2xl bg-[#1e293b]/50 border transition-all overflow-hidden ${isOverdue ? 'border-red-500/50 bg-red-500/5' : ''}`}
+                                        style={{
+                                            borderColor: isOverdue ? undefined : (ticket.status === 'called' ? 'rgba(245, 158, 11, 0.5)' : 'rgba(16, 185, 129, 0.5)')
+                                        }}
+                                    >
+                                        {ticket.status === 'called' && !isOverdue && (
+                                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-amber-500 animate-pulse"></div>
                                         )}
-                                        <button
-                                            onClick={() => handleStatusChange(ticket.id, 'done')}
-                                            className="p-3 rounded-xl bg-slate-700 hover:bg-emerald-600 text-slate-300 hover:text-white border border-white/10 transition-all active:scale-95"
-                                            title="Finalizar"
-                                        >
-                                            <CheckCircle size={20} />
-                                        </button>
+                                        {ticket.status === 'called' && isOverdue && (
+                                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-red-500 animate-pulse"></div>
+                                        )}
+                                        {ticket.status === 'in_service' && (
+                                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-emerald-500"></div>
+                                        )}
+
+                                        <div className="pl-3">
+                                            <div className="flex items-center gap-3">
+                                                <h3 className="text-2xl font-bold text-white m-0">#{ticket.number}</h3>
+                                                <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider border ${isOverdue
+                                                        ? 'bg-red-500/20 text-red-400 border-red-500/20'
+                                                        : ticket.status === 'called'
+                                                            ? 'bg-amber-500/20 text-amber-400 border-amber-500/20'
+                                                            : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20'
+                                                    }`}>
+                                                    {isOverdue ? 'AGUARDANDO' : (ticket.status === 'called' ? 'CHAMANDO' : 'ATENDENDO')}
+                                                </span>
+                                                {isOverdue && (
+                                                    <span className="flex items-center gap-1 px-2 py-0.5 rounded bg-red-500/20 text-red-400 text-[10px] font-bold border border-red-500/20 animate-pulse">
+                                                        <AlertTriangle size={12} />
+                                                        {calledMins}min
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <p className="text-xs text-slate-400 mt-1">
+                                                {ticket.calledAt && `Chamado às ${formatTime(new Date(ticket.calledAt))}`}
+                                                {ticket.status === 'called' && calledMins > 0 && !isOverdue && ` (há ${calledMins}min)`}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex items-center gap-2">
+                                            {ticket.status === 'called' && (
+                                                <>
+                                                    <button
+                                                        onClick={() => handleNoShow(ticket.id)}
+                                                        className="p-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/20 transition-all active:scale-95"
+                                                        title="Não Compareceu"
+                                                    >
+                                                        <UserX size={20} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleStatusChange(ticket.id, 'in_service')}
+                                                        className="p-3 rounded-xl bg-blue-500 hover:bg-blue-400 text-white shadow-lg shadow-blue-500/20 transition-all active:scale-95"
+                                                        title="Iniciar Atendimento"
+                                                    >
+                                                        <Play size={20} fill="currentColor" />
+                                                    </button>
+                                                </>
+                                            )}
+                                            <button
+                                                onClick={() => handleStatusChange(ticket.id, 'done')}
+                                                className="p-3 rounded-xl bg-slate-700 hover:bg-emerald-600 text-slate-300 hover:text-white border border-white/10 transition-all active:scale-95"
+                                                title="Finalizar"
+                                            >
+                                                <CheckCircle size={20} />
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </section>
                 </div>

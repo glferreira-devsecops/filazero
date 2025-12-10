@@ -266,6 +266,7 @@ export const updateTicketStatus = async (clinicId, ticketId, status) => {
             if (status === 'called') dbStr.queues[clinicId][ticketIdx].calledAt = now;
             if (status === 'in_service') dbStr.queues[clinicId][ticketIdx].startedAt = now;
             if (status === 'done') dbStr.queues[clinicId][ticketIdx].finishedAt = now;
+            if (status === 'no_show') dbStr.queues[clinicId][ticketIdx].noShowAt = now;
 
             saveMockDb(dbStr);
         }
@@ -278,6 +279,7 @@ export const updateTicketStatus = async (clinicId, ticketId, status) => {
         if (status === 'called') updateData.calledAt = new Date().toISOString();
         if (status === 'in_service') updateData.startedAt = new Date().toISOString();
         if (status === 'done') updateData.finishedAt = new Date().toISOString();
+        if (status === 'no_show') updateData.noShowAt = new Date().toISOString();
 
         await pb.collection('tickets').update(ticketId, updateData);
     } catch (e) {

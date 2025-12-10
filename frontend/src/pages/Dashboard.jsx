@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { subscribeToQueue } from '../services/ticketService';
+import { createTicket, subscribeToQueue } from '../services/ticketService';
 
 export default function Dashboard() {
-    const { currentUser, pb } = useAuth();
+    const { currentUser } = useAuth();
     const clinicId = currentUser?.id;
 
     const [tickets, setTickets] = useState([]);
@@ -65,7 +65,9 @@ export default function Dashboard() {
         if (!window.confirm("Gerar 5 tickets de teste?")) return;
         setLoading(true);
         try {
-            await pb.generateDemoTickets(5);
+            for (let i = 0; i < 5; i++) {
+                await createTicket(clinicId, `Paciente ${i + 1}`);
+            }
             addToast("✅ 5 tickets gerados com sucesso!", "success");
         } catch (e) {
             console.error(e);
@@ -77,8 +79,6 @@ export default function Dashboard() {
 
     const handleClearData = () => {
         if (!window.confirm("Limpar todos os dados de demo?")) return;
-        pb.clearMockData();
-        // Also clear old mock storage for backwards compatibility
         localStorage.removeItem('filaZeroMockDb');
         window.location.reload();
     };

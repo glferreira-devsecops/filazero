@@ -18,41 +18,30 @@ class ErrorBoundary extends React.Component {
     render() {
         if (this.state.hasError) {
             return (
-                <div className="flex-center flex-col" style={{
-                    minHeight: '100vh',
-                    background: 'var(--bg-app)',
-                    textAlign: 'center',
-                    padding: '2rem'
-                }}>
-                    <div className="card glass animate-slideUp flex-col gap-md" style={{ maxWidth: '400px' }}>
-                        <div className="flex-center" style={{
-                            background: '#fee2e2',
-                            color: '#ef4444',
-                            width: '64px',
-                            height: '64px',
-                            borderRadius: '50%',
-                            margin: '0 auto'
-                        }}>
+                <div className="min-h-screen flex items-center justify-center bg-slate-50 flex-col p-4">
+                    <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 text-center animate-slideUp">
+                        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-red-500">
                             <AlertTriangle size={32} />
                         </div>
-
-                        <h2 style={{ margin: 0 }}>Ops! Algo deu errado.</h2>
-                        <p className="text-muted">
-                            Não se preocupe, é apenas um soluço no sistema. Tente recarregar a página.
+                        <h2 className="text-xl font-bold text-slate-800 mb-2">Ops! Algo deu errado.</h2>
+                        <p className="text-slate-500 text-sm mb-6">
+                            Não se preocupe, os dados estão seguros. Tente recarregar a página.
                         </p>
 
-                        {this.props.showDetails && this.state.error && (
-                            <pre className="text-xs text-left p-2 bg-gray-100 rounded overflow-auto" style={{ maxHeight: '100px' }}>
-                                {this.state.error.toString()}
-                            </pre>
+                        {this.state.error && (
+                            <div className="mb-6 bg-slate-100 p-4 rounded-lg overflow-auto max-h-32 text-left">
+                                <pre className="text-xs text-slate-600 font-mono whitespace-pre-wrap">
+                                    {this.state.error.toString()}
+                                </pre>
+                            </div>
                         )}
 
                         <button
                             onClick={() => window.location.reload()}
-                            className="btn btn-primary"
+                            className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
                         >
                             <RefreshCw size={18} />
-                            Recarregar Aplicação
+                            Recarregar Página
                         </button>
                     </div>
                 </div>

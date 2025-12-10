@@ -176,7 +176,7 @@ export default function RoomPanel() {
                             Últimos Chamados
                         </h3>
 
-                        <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+                        <div className="flex-1 overflow-y-auto space-y-4 max-h-[calc(100vh-200px)] pr-2 custom-scrollbar">
                             {history.length === 0 && (
                                 <div className="h-full flex items-center justify-center opacity-30">
                                     <p className="text-center font-medium">Nenhum histórico recente</p>
@@ -197,8 +197,8 @@ export default function RoomPanel() {
                                     </span>
                                     <span
                                         className={`px-3 py-1 rounded text-xs font-bold uppercase tracking-wider ${t.status === 'in_service'
-                                                ? 'bg-blue-500/20 text-blue-400'
-                                                : 'bg-amber-500/20 text-amber-400'
+                                            ? 'bg-blue-500/20 text-blue-400'
+                                            : 'bg-amber-500/20 text-amber-400'
                                             }`}
                                     >
                                         {t.status === 'in_service' ? 'Atendendo' : 'Aguardando'}

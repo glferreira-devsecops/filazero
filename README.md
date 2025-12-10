@@ -17,6 +17,9 @@
 
 [Features](#-key-features) • [Demo](#-live-demo) • [Tech Stack](#-technology-stack) • [Deployment](#-deployment) • [Documentation](#-documentation)
 
+> [!TIP]
+> **[📺 CLICK HERE FOR THE LIVE DEMO WALKTHROUGH / CLIQUE AQUI PARA O GUIA DE DEMO](./docs/DEMO_WALKTHROUGH.md)**
+
 </div>
 
 <br />

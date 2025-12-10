@@ -1,0 +1,9 @@
+Category,Description,Amount (USD)
+Revenue,Gross Revenue (Pre-Revenue Phase),0.00
+Cost of Goods Sold,Hosting & Infrastructure (Vercel/Fly.io),0.00
+Gross Profit,,0.00
+Operating Expenses,Senior Full-Stack Development (400h @ $100/hr),40000.00
+Operating Expenses,UI/UX Design & Branding (40h @ $100/hr),4000.00
+Operating Expenses,Project Management & QA (40h @ $100/hr),4000.00
+Total Operating Expenses,Total R&D Investment,48000.00
+Net Income,(Development Investment Value),-48000.00

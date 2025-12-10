@@ -1,13 +1,15 @@
 {
     "version": 2,
-    "framework": "vite",
-    "rewrites": [
-        {
-            "source": "/((?!assets|favicon\\.svg|.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)).*)",
-            "destination": "/index.html"
-        }
-    ],
     "buildCommand": "cd frontend && npm install && npm run build",
     "outputDirectory": "frontend/dist",
-    "installCommand": "cd frontend && npm install"
+    "installCommand": "cd frontend && npm install",
+    "routes": [
+        {
+            "handle": "filesystem"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/index.html"
+        }
+    ]
 }

@@ -1,4 +1,4 @@
-import { CheckCircle, Clock, Megaphone, Play, QrCode, RefreshCw, User, X } from 'lucide-react';
+import { CheckCircle, Clock, LayoutDashboard, Megaphone, Monitor, Play, QrCode, RefreshCw, User, X } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -48,199 +48,235 @@ export default function Reception() {
     };
 
     return (
-        <div className="container" style={{ paddingBottom: '2rem' }}>
-            {/* Header */}
-            <header className="flex-between flex-wrap gap-md" style={{ marginBottom: '2rem' }}>
-                <div>
-                    <h1 style={{ margin: 0 }}>🏥 Recepção</h1>
-                    <p className="text-muted" style={{ margin: 0 }}>Clínica {clinicId}</p>
-                </div>
+        <div className="min-h-screen bg-[#0f172a] text-slate-50 font-sans p-6 pb-24">
+            <div className="container max-w-7xl mx-auto space-y-8">
 
-                <div className="flex-center gap-md">
-                    <div className="clock">
-                        <Clock size={16} style={{ marginRight: '0.5rem', verticalAlign: 'middle' }} />
-                        {formatTime(currentTime)}
+                {/* Header */}
+                <header className="flex flex-col md:flex-row items-center justify-between gap-6 p-6 rounded-3xl bg-white/[0.03] border border-white/5 backdrop-blur-xl shadow-lg">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                            <User size={24} />
+                        </div>
+                        <div>
+                            <h1 className="text-2xl font-bold text-white tracking-tight">Recepção</h1>
+                            <p className="text-slate-400 text-sm font-medium">Clínica {clinicId}</p>
+                        </div>
                     </div>
 
-                    <button onClick={() => setShowQR(true)} className="btn btn-outline btn-sm">
-                        <QrCode size={18} />
-                        QR Code
-                    </button>
-                    <button onClick={() => navigate('/panel')} className="btn btn-outline btn-sm">
-                        📺 TV
-                    </button>
-                    <button onClick={() => navigate('/admin')} className="btn btn-outline btn-sm">
-                        📊 Stats
-                    </button>
-                </div>
-            </header>
+                    <div className="flex flex-wrap items-center justify-center gap-3">
+                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-black/20 border border-white/5 text-slate-300 font-mono text-sm font-bold shadow-inner">
+                            <Clock size={16} className="text-emerald-400" />
+                            {formatTime(currentTime)}
+                        </div>
 
-            {/* Quick Stats */}
-            <div className="grid gap-md" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', marginBottom: '2rem' }}>
-                <div className="card text-center" style={{ background: 'var(--accent-light)', border: '1px solid var(--accent)' }}>
-                    <p className="text-sm m-0" style={{ color: 'var(--accent)' }}>Aguardando</p>
-                    <h2 className="m-0" style={{ color: '#b45309' }}>{waitingTickets.length}</h2>
-                </div>
-                <div className="card text-center" style={{ background: 'var(--success-light)', border: '1px solid var(--success)' }}>
-                    <p className="text-sm m-0" style={{ color: 'var(--success)' }}>Em Atendimento</p>
-                    <h2 className="m-0" style={{ color: '#15803d' }}>{activeTickets.length}</h2>
-                </div>
-                <div className="card text-center" style={{ background: 'var(--secondary-light)', border: '1px solid var(--secondary)' }}>
-                    <p className="text-sm m-0" style={{ color: 'var(--secondary)' }}>Tempo Médio</p>
-                    <h2 className="m-0" style={{ color: '#1d4ed8' }}>~12min</h2>
-                </div>
-            </div>
+                        <button onClick={() => setShowQR(true)} className="group flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-slate-300 hover:text-white transition-all">
+                            <QrCode size={18} className="group-hover:scale-110 transition-transform" />
+                            <span className="font-semibold text-sm">QR Code</span>
+                        </button>
 
-            {/* Main Grid */}
-            <div className="animate-slideUp" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                        <button onClick={() => navigate('/panel')} className="group flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-slate-300 hover:text-white transition-all">
+                            <Monitor size={18} className="group-hover:scale-110 transition-transform" />
+                            <span className="font-semibold text-sm">Painel TV</span>
+                        </button>
 
-                {/* Waiting Column */}
-                <section className="flex-col gap-md">
-                    <div className="card glass">
-                        <h2 className="flex-center gap-sm" style={{ marginTop: 0, fontSize: '1.25rem' }}>
-                            <User size={24} className="text-muted" />
-                            Aguardando
-                            <span className="badge badge-waiting">{waitingTickets.length}</span>
-                        </h2>
-                        <div className="flex-col gap-sm">
+                        <button onClick={() => navigate('/admin')} className="group flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 text-indigo-300 hover:text-white transition-all">
+                            <LayoutDashboard size={18} className="group-hover:scale-110 transition-transform" />
+                            <span className="font-semibold text-sm">Admin</span>
+                        </button>
+                    </div>
+                </header>
+
+                {/* Quick Stats Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="p-6 rounded-2xl bg-amber-500/10 border border-amber-500/20 relative overflow-hidden group">
+                        <div className="absolute -right-4 -top-4 text-amber-500/10 group-hover:text-amber-500/20 transition-colors">
+                            <User size={100} />
+                        </div>
+                        <p className="text-amber-400 text-sm font-bold uppercase tracking-wider relative z-10">Na Fila</p>
+                        <h2 className="text-4xl font-extrabold text-white mt-1 relative z-10">{waitingTickets.length}</h2>
+                    </div>
+
+                    <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 relative overflow-hidden group">
+                        <div className="absolute -right-4 -top-4 text-emerald-500/10 group-hover:text-emerald-500/20 transition-colors">
+                            <Megaphone size={100} />
+                        </div>
+                        <p className="text-emerald-400 text-sm font-bold uppercase tracking-wider relative z-10">Em Atendimento</p>
+                        <h2 className="text-4xl font-extrabold text-white mt-1 relative z-10">{activeTickets.length}</h2>
+                    </div>
+
+                    <div className="p-6 rounded-2xl bg-blue-500/10 border border-blue-500/20 relative overflow-hidden group">
+                        <div className="absolute -right-4 -top-4 text-blue-500/10 group-hover:text-blue-500/20 transition-colors">
+                            <Clock size={100} />
+                        </div>
+                        <p className="text-blue-400 text-sm font-bold uppercase tracking-wider relative z-10">Tempo Médio</p>
+                        <h2 className="text-4xl font-extrabold text-white mt-1 relative z-10">~12min</h2>
+                    </div>
+                </div>
+
+                {/* Main Split Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-slideUp">
+
+                    {/* Waiting Column */}
+                    <section className="flex flex-col gap-4">
+                        <div className="flex items-center justify-between px-2">
+                            <h2 className="flex items-center gap-3 text-xl font-bold text-slate-200">
+                                <div className="p-2 rounded-lg bg-amber-500/10 text-amber-500"><User size={20} /></div>
+                                Aguardando Chamada
+                            </h2>
+                            <div className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold border border-amber-500/20">
+                                {waitingTickets.length}
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-3 min-h-[300px]">
                             {waitingTickets.length === 0 && (
-                                <div className="text-center py-4">
-                                    <RefreshCw size={32} className="text-muted animate-float" />
-                                    <p className="text-muted">Nenhum paciente na fila</p>
+                                <div className="flex flex-col items-center justify-center py-20 border-2 border-dashed border-white/5 rounded-3xl text-slate-500 bg-white/[0.02]">
+                                    <RefreshCw size={48} className="mb-4 opacity-20" />
+                                    <p className="font-medium">Nenhum paciente na fila</p>
                                 </div>
                             )}
                             {waitingTickets.map(ticket => (
                                 <div
                                     key={ticket.id}
-                                    className="card interactive flex-between"
-                                    style={{ padding: '1rem', border: '1px solid var(--border)', cursor: 'default' }}
+                                    className="group flex items-center justify-between p-5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.05] border border-white/5 hover:border-amber-500/30 transition-all shadow-sm"
                                 >
                                     <div>
-                                        <h3 style={{ margin: 0, fontSize: '1.75rem', color: 'var(--primary-dark)' }}>
+                                        <h3 className="text-3xl font-bold text-white group-hover:text-amber-400 transition-colors m-0 leading-none">
                                             #{ticket.number}
                                         </h3>
-                                        <small className="text-muted">
-                                            {ticket.createdAt instanceof Date
-                                                ? `Chegou ${formatTime(ticket.createdAt)}`
-                                                : '--:--'}
-                                        </small>
+                                        <div className="flex items-center gap-2 mt-2 text-xs text-slate-400 font-mono">
+                                            <Clock size={12} />
+                                            {formatTime(new Date(ticket.createdAt))}
+                                        </div>
                                     </div>
                                     <button
                                         onClick={() => handleStatusChange(ticket.id, 'called')}
-                                        className="btn btn-primary"
+                                        className="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all active:scale-95 flex items-center gap-2"
                                     >
-                                        <Megaphone size={18} /> Chamar
+                                        <Megaphone size={18} />
+                                        CHAMAR
                                     </button>
                                 </div>
                             ))}
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                {/* Active Column */}
-                <section className="flex-col gap-md">
-                    <div className="card glass">
-                        <h2 className="flex-center gap-sm" style={{ marginTop: 0, color: 'var(--primary)', fontSize: '1.25rem' }}>
-                            <Megaphone size={24} />
-                            Em Atendimento
-                        </h2>
-                        <div className="flex-col gap-sm">
+                    {/* Active Column */}
+                    <section className="flex flex-col gap-4">
+                        <div className="flex items-center justify-between px-2">
+                            <h2 className="flex items-center gap-3 text-xl font-bold text-slate-200">
+                                <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-500"><Megaphone size={20} /></div>
+                                Em Andamento
+                            </h2>
+                            <div className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/20">
+                                {activeTickets.length}
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-3 min-h-[300px]">
                             {activeTickets.length === 0 && (
-                                <p className="text-muted text-center py-4">Nenhum atendimento ativo</p>
+                                <div className="flex flex-col items-center justify-center py-20 border-2 border-dashed border-white/5 rounded-3xl text-slate-500 bg-white/[0.02]">
+                                    <p className="font-medium">Nenhum atendimento ativo</p>
+                                </div>
                             )}
                             {activeTickets.map(ticket => (
                                 <div
                                     key={ticket.id}
-                                    className="card flex-between"
+                                    className="relative flex items-center justify-between p-5 rounded-2xl bg-[#1e293b]/50 border transition-all overflow-hidden"
                                     style={{
-                                        padding: '1rem',
-                                        borderLeft: `4px solid ${ticket.status === 'called' ? 'var(--accent)' : 'var(--success)'}`
+                                        borderColor: ticket.status === 'called' ? 'rgba(245, 158, 11, 0.5)' : 'rgba(16, 185, 129, 0.5)'
                                     }}
                                 >
-                                    <div>
-                                        <div className="flex-center gap-xs" style={{ justifyContent: 'flex-start' }}>
-                                            <h3 style={{ margin: 0 }}>#{ticket.number}</h3>
-                                            <span className={`badge ${ticket.status === 'called' ? 'badge-called' : 'badge-service'}`}>
+                                    {ticket.status === 'called' && (
+                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-amber-500 animate-pulse"></div>
+                                    )}
+                                    {ticket.status === 'in_service' && (
+                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-emerald-500"></div>
+                                    )}
+
+                                    <div className="pl-3">
+                                        <div className="flex items-center gap-3">
+                                            <h3 className="text-2xl font-bold text-white m-0">#{ticket.number}</h3>
+                                            <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider border ${ticket.status === 'called'
+                                                    ? 'bg-amber-500/20 text-amber-400 border-amber-500/20'
+                                                    : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20'
+                                                }`}>
                                                 {ticket.status === 'called' ? 'CHAMANDO' : 'ATENDENDO'}
                                             </span>
                                         </div>
-                                        <small className="text-muted">
-                                            {ticket.calledAt instanceof Date
-                                                ? `Chamado ${formatTime(ticket.calledAt)}`
-                                                : ''}
-                                        </small>
+                                        <p className="text-xs text-slate-400 mt-1">
+                                            {ticket.calledAt && `Iniciado às ${formatTime(new Date(ticket.calledAt))}`}
+                                        </p>
                                     </div>
-                                    <div className="flex-center gap-xs">
+
+                                    <div className="flex items-center gap-2">
                                         {ticket.status === 'called' && (
                                             <button
                                                 onClick={() => handleStatusChange(ticket.id, 'in_service')}
-                                                className="btn btn-accent btn-sm"
+                                                className="p-3 rounded-xl bg-blue-500 hover:bg-blue-400 text-white shadow-lg shadow-blue-500/20 transition-all active:scale-95"
                                                 title="Iniciar Atendimento"
                                             >
-                                                <Play size={16} />
+                                                <Play size={20} fill="currentColor" />
                                             </button>
                                         )}
                                         <button
                                             onClick={() => handleStatusChange(ticket.id, 'done')}
-                                            className="btn btn-success btn-sm"
+                                            className="p-3 rounded-xl bg-slate-700 hover:bg-emerald-600 text-slate-300 hover:text-white border border-white/10 transition-all active:scale-95"
                                             title="Finalizar"
                                         >
-                                            <CheckCircle size={16} />
+                                            <CheckCircle size={20} />
                                         </button>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                    </div>
-                </section>
+                    </section>
+                </div>
             </div>
 
             {/* QR Code Modal */}
             {showQR && (
                 <div
-                    className="flex-center"
-                    style={{
-                        position: 'fixed',
-                        inset: 0,
-                        background: 'rgba(0,0,0,0.5)',
-                        backdropFilter: 'blur(4px)',
-                        zIndex: 1000
-                    }}
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fadeIn"
                     onClick={() => setShowQR(false)}
                 >
                     <div
-                        className="card flex-col flex-center gap-lg animate-scaleIn"
-                        style={{ maxWidth: '350px' }}
+                        className="w-full max-w-sm bg-[#0f172a] border border-white/10 rounded-3xl p-8 shadow-2xl animate-scaleIn relative"
                         onClick={e => e.stopPropagation()}
                     >
-                        <div className="flex-between" style={{ width: '100%' }}>
-                            <h3 style={{ margin: 0 }}>QR Code da Clínica</h3>
-                            <button onClick={() => setShowQR(false)} className="btn btn-ghost btn-icon">
-                                <X size={20} />
-                            </button>
+                        <button
+                            onClick={() => setShowQR(false)}
+                            className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+                        >
+                            <X size={20} />
+                        </button>
+
+                        <div className="text-center space-y-6">
+                            <div>
+                                <h3 className="text-xl font-bold text-white">QR Code da Clínica</h3>
+                                <p className="text-slate-400 text-sm mt-1">Pacientes escaneiam para entrar na fila</p>
+                            </div>
+
+                            <div className="p-4 bg-white rounded-2xl inline-block shadow-lg">
+                                <QRCodeSVG
+                                    value={clinicUrl}
+                                    size={200}
+                                    bgColor="#ffffff"
+                                    fgColor="#0f172a"
+                                    level="H"
+                                />
+                            </div>
+
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    className="w-full h-10 px-3 bg-black/20 border border-white/10 rounded-lg text-slate-300 text-xs text-center font-mono focus:outline-none focus:border-emerald-500/50"
+                                    value={clinicUrl}
+                                    readOnly
+                                    onClick={e => e.target.select()}
+                                />
+                            </div>
                         </div>
-
-                        <div className="qr-container">
-                            <QRCodeSVG
-                                value={clinicUrl}
-                                size={200}
-                                bgColor="#ffffff"
-                                fgColor="#10b981"
-                                level="H"
-                            />
-                        </div>
-
-                        <p className="text-center text-muted text-sm m-0">
-                            Pacientes podem escanear para entrar na fila
-                        </p>
-
-                        <input
-                            type="text"
-                            className="input text-center"
-                            value={clinicUrl}
-                            readOnly
-                            onClick={e => e.target.select()}
-                        />
                     </div>
                 </div>
             )}

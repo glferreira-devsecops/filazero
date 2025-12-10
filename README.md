@@ -120,7 +120,18 @@
 
 ## 🛠 Tech Stack / Tecnologias
 
-- **Frontend**: React 18, Vite, Context API, Tailwind-like CSS
+<div align="center">
+
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![PocketBase](https://img.shields.io/badge/PocketBase-B8DBE4?style=for-the-badge&logo=pocketbase&logoColor=black)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+
+</div>
+
+- **Frontend**: React 18, Vite, Context API, Tailwind CSS
 - **Backend**: PocketBase (Go + SQLite in WAL mode)
 - **Real-time**: Native WebSockets (Server-Sent Events)
 - **Deploy**: Docker Container, VPS, or Vercel (Frontend)

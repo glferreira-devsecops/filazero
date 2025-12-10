@@ -31,4 +31,12 @@ dist-ssr
 coverage
 
 # Misc
-nohup.out
+
+# PocketBase (Binaries & Data)
+backend/pocketbase
+backend/pb_data/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+

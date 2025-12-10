@@ -12,6 +12,7 @@ Use this document to fill out your listing on Acquire.com. All data is verified 
 **Short Description (280 chars max)**:
 `Pre-revenue, production-ready SaaS for clinics. Eliminates waiting rooms via mobile. Modern stack (React 18 + PocketBase). Offline-first architecture. 200K+ clinic TAM in Brazil. Selling below dev cost for quick exit.`
 
+**Live Demo**: <https://filazero1.vercel.app/>
 **Date Founded**: Oct 2024 (approx)
 **Team Size**: 1 (Owner)
 **Location**: Brazil (Remote)
@@ -65,7 +66,17 @@ You are buying a completed product for *less* than the cost to build it ($48k de
 
 ---
 
-## 6. Assets Included
+## 6. Competitors
+
+1. **Qurabook**: Main low-cost competitor. Vulnerable due to outdated tech (PHP) and poor UX/UI.
+2. **OnCord**: Enterprise focus. Too expensive and complex for small clinics.
+3. **Qmatic**: Hardware-heavy (requires kiosks). Expensive legacy solution.
+
+**Our Advantage**: FilaZero is the only "Modern & Light" option—no hardware required (runs on patient's phone), modern UX (React), and offline-first resilience.
+
+---
+
+## 7. Assets Included
 
 * ✅ Full Source Code (GitHub Repo)
 * ✅ Intellectual Property Rights

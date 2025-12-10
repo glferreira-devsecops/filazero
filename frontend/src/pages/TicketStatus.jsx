@@ -13,6 +13,8 @@ export default function TicketStatus() {
     const [position, setPosition] = useState(null);
     const [loading, setLoading] = useState(false);
     const [soundEnabled, setSoundEnabled] = useState(true);
+    const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+    const [leavingQueue, setLeavingQueue] = useState(false);
     const { addToast } = useToast();
 
     // Use ref to track previous status without causing re-renders
@@ -81,21 +83,23 @@ export default function TicketStatus() {
     };
 
     const handleLeaveQueue = async () => {
-        if (window.confirm('Deseja realmente sair da fila?')) {
-            try {
-                // Remove from mock database
-                if (ticket?.id) {
-                    await removeTicket(clinicId, ticket.id);
-                }
-                // Clear localStorage reference
-                localStorage.removeItem(`filazero_ticket_${clinicId}`);
-                setTicket(null);
-                setPosition(null);
-                addToast('👋 Você saiu da fila com sucesso!', 'success');
-            } catch (e) {
-                console.error('Error leaving queue:', e);
-                addToast('Erro ao sair da fila', 'error');
+        setLeavingQueue(true);
+        try {
+            // Remove from mock database
+            if (ticket?.id) {
+                await removeTicket(clinicId, ticket.id);
             }
+            // Clear localStorage reference
+            localStorage.removeItem(`filazero_ticket_${clinicId}`);
+            setTicket(null);
+            setPosition(null);
+            setShowLeaveConfirm(false);
+            addToast('👋 Você saiu da fila com sucesso!', 'success');
+        } catch (e) {
+            console.error('Error leaving queue:', e);
+            addToast('Erro ao sair da fila', 'error');
+        } finally {
+            setLeavingQueue(false);
         }
     };
 
@@ -273,7 +277,11 @@ export default function TicketStatus() {
                         <h3 className="text-xl font-bold text-white mb-2">Atendimento Finalizado</h3>
                         <p className="text-slate-400 text-sm mb-6">Obrigado por utilizar o FilaZero!</p>
                         <button
-                            onClick={handleLeaveQueue}
+                            onClick={() => {
+                                localStorage.removeItem(`filazero_ticket_${clinicId}`);
+                                setTicket(null);
+                                setPosition(null);
+                            }}
                             className="px-8 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl font-bold transition-all border border-white/10"
                         >
                             Retirar Nova Senha
@@ -294,9 +302,9 @@ export default function TicketStatus() {
 
                         <button
                             className="flex flex-col items-center justify-center gap-2 p-4 rounded-2xl bg-white/5 hover:bg-red-500/10 border border-white/5 hover:border-red-500/20 text-slate-400 hover:text-red-400 transition-all group"
-                            onClick={handleLeaveQueue}
+                            onClick={() => setShowLeaveConfirm(true)}
                         >
-                            <Ticket size={20} className="rotate-45 group-hover:text-red-400 transition-colors" />
+                            <LogOut size={20} className="group-hover:text-red-400 transition-colors" />
                             <span className="text-[10px] font-bold uppercase tracking-wider">Sair da Fila</span>
                         </button>
                     </div>
@@ -307,6 +315,56 @@ export default function TicketStatus() {
             <div className="fixed bottom-0 left-0 w-full p-4 text-center bg-gradient-to-t from-[#0f172a] to-transparent pointer-events-none">
                 <span className="text-[10px] uppercase tracking-widest text-slate-600 font-bold">FilaZero Saúde • Patient App</span>
             </div>
+
+            {/* Leave Queue Confirmation Modal */}
+            {showLeaveConfirm && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-6 animate-fadeIn"
+                    onClick={() => setShowLeaveConfirm(false)}
+                >
+                    <div
+                        className="w-full max-w-sm bg-slate-900 border border-white/10 rounded-3xl p-6 shadow-2xl animate-scaleIn"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex justify-between items-start mb-6">
+                            <div className="w-12 h-12 rounded-2xl bg-red-500/20 text-red-400 flex items-center justify-center">
+                                <LogOut size={24} />
+                            </div>
+                            <button
+                                onClick={() => setShowLeaveConfirm(false)}
+                                className="text-slate-500 hover:text-white transition-colors"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <h3 className="text-xl font-bold text-white mb-2">Sair da Fila?</h3>
+                        <p className="text-slate-400 text-sm mb-6">
+                            Você perderá sua posição na fila e precisará retirar uma nova senha.
+                        </p>
+
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setShowLeaveConfirm(false)}
+                                className="flex-1 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl font-bold transition-all border border-white/10"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleLeaveQueue}
+                                disabled={leavingQueue}
+                                className="flex-1 py-3 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                            >
+                                {leavingQueue ? (
+                                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                ) : (
+                                    <>Sim, Sair</>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

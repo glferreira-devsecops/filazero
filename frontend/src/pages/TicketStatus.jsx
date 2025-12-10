@@ -1,5 +1,5 @@
 import { AlertCircle, Bell, BellOff, CheckCircle, Clock, Ticket, Users, Volume2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { createTicket, getQueuePosition, removeTicket, subscribeToTicket } from '../services/ticketService';
@@ -12,15 +12,19 @@ export default function TicketStatus() {
     const [soundEnabled, setSoundEnabled] = useState(true);
     const { addToast } = useToast();
 
+    // Use ref to track previous status without causing re-renders
+    const prevStatusRef = useRef(null);
+
     // Check if we already have a ticket in localStorage for this clinic
     useEffect(() => {
         const storedTicketId = localStorage.getItem(`filazero_ticket_${clinicId}`);
         if (storedTicketId) {
             const unsubscribe = subscribeToTicket(clinicId, storedTicketId, (data) => {
                 // Audio alert if status changes to called
-                if (data && data.status === 'called' && ticket && ticket.status !== 'called') {
+                if (data && data.status === 'called' && prevStatusRef.current !== 'called') {
                     playAlert();
                 }
+                prevStatusRef.current = data?.status;
                 setTicket(data);
                 if (data && data.status === 'waiting') {
                     updatePosition(data.number);
@@ -28,7 +32,7 @@ export default function TicketStatus() {
             });
             return () => unsubscribe();
         }
-    }, [clinicId, ticket]);
+    }, [clinicId]); // Removed ticket from dependencies
 
     const playAlert = () => {
         if (!soundEnabled) return;

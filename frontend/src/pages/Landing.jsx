@@ -228,7 +228,7 @@ export default function Landing() {
                     </div>
 
                     <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 text-[10px] text-slate-600 font-medium uppercase tracking-widest">
-                        <p>© 2024 FilaZero. All rights reserved.</p>
+                        <p>© {new Date().getFullYear()} FilaZero. All rights reserved.</p>
                         <p className="flex items-center gap-2 text-emerald-500/80">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_currentColor]"></span>
                             System Operational

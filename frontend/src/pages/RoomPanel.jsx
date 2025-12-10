@@ -1,4 +1,5 @@
-import { Activity, Clock, Expand, Minimize, QrCode, Volume2, VolumeX } from 'lucide-react';
+import { Activity, Clock, Expand, Minimize, Volume2, VolumeX } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { subscribeToQueue } from '../services/ticketService';
@@ -215,7 +216,7 @@ export default function RoomPanel() {
                             <h4 className="text-xl font-bold text-white">Fila Digital</h4>
                         </div>
                         <div className="p-2 bg-white rounded-xl">
-                            <QrCode size={48} className="text-slate-900" />
+                            <QRCodeSVG value={`${window.location.origin}/clinic/${clinicId}`} size={48} bgColor="#ffffff" fgColor="#0f172a" />
                         </div>
                     </div>
                 </div>

@@ -43,6 +43,12 @@ export default function Reception() {
     const activeTickets = tickets.filter(t => ['called', 'in_service'].includes(t.status));
     const clinicUrl = `${window.location.origin}/clinic/${clinicId}`;
 
+    // Calculate real average wait time
+    const completedTickets = tickets.filter(t => t.status === 'done' && t.startedAt && t.createdAt);
+    const avgWaitTime = completedTickets.length > 0
+        ? Math.round(completedTickets.reduce((acc, t) => acc + (new Date(t.startedAt) - new Date(t.createdAt)), 0) / completedTickets.length / 60000)
+        : 12; // Default estimate
+
     const formatTime = (date) => {
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };
@@ -109,7 +115,7 @@ export default function Reception() {
                             <Clock size={100} />
                         </div>
                         <p className="text-blue-400 text-sm font-bold uppercase tracking-wider relative z-10">Tempo Médio</p>
-                        <h2 className="text-4xl font-extrabold text-white mt-1 relative z-10">~12min</h2>
+                        <h2 className="text-4xl font-extrabold text-white mt-1 relative z-10">~{avgWaitTime}min</h2>
                     </div>
                 </div>
 
@@ -198,8 +204,8 @@ export default function Reception() {
                                         <div className="flex items-center gap-3">
                                             <h3 className="text-2xl font-bold text-white m-0">#{ticket.number}</h3>
                                             <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider border ${ticket.status === 'called'
-                                                    ? 'bg-amber-500/20 text-amber-400 border-amber-500/20'
-                                                    : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20'
+                                                ? 'bg-amber-500/20 text-amber-400 border-amber-500/20'
+                                                : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20'
                                                 }`}>
                                                 {ticket.status === 'called' ? 'CHAMANDO' : 'ATENDENDO'}
                                             </span>

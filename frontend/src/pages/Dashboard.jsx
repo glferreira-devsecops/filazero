@@ -165,7 +165,7 @@ export default function Dashboard() {
                     <StatCard
                         icon={BarChart3}
                         label="Satisfação (NPS)"
-                        value="4.8"
+                        value="4.8 ★"
                         colorClass="text-purple-400"
                         bgClass="bg-purple-500/5 hover:bg-purple-500/10"
                         borderClass="border-purple-500/20"

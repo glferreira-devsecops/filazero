@@ -288,6 +288,32 @@ export const updateTicketStatus = async (clinicId, ticketId, status) => {
 };
 
 /**
+ * Removes a ticket from the queue (patient leaves)
+ */
+export const removeTicket = async (clinicId, ticketId) => {
+    if (clinicId === 'guest' || clinicId === 'demo') {
+        USE_MOCK = true;
+    }
+
+    if (USE_MOCK) {
+        const dbStr = getMockDb();
+        if (!dbStr.queues[clinicId]) return;
+
+        dbStr.queues[clinicId] = dbStr.queues[clinicId].filter(t => t.id !== ticketId);
+        saveMockDb(dbStr);
+        return;
+    }
+
+    try {
+        await pb.collection('tickets').delete(ticketId);
+    } catch (e) {
+        console.error('Remove ticket error:', e);
+        USE_MOCK = true;
+        return removeTicket(clinicId, ticketId);
+    }
+};
+
+/**
  * Clear all mock data (for testing)
  */
 export const clearMockData = () => {

@@ -2,7 +2,7 @@ import { AlertCircle, Bell, BellOff, CheckCircle, Clock, Ticket, Users, Volume2 
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
-import { createTicket, getQueuePosition, subscribeToTicket } from '../services/ticketService';
+import { createTicket, getQueuePosition, removeTicket, subscribeToTicket } from '../services/ticketService';
 
 export default function TicketStatus() {
     const { clinicId } = useParams();
@@ -73,11 +73,22 @@ export default function TicketStatus() {
         }
     };
 
-    const handleLeaveQueue = () => {
+    const handleLeaveQueue = async () => {
         if (window.confirm('Deseja realmente sair da fila?')) {
-            localStorage.removeItem(`filazero_ticket_${clinicId}`);
-            setTicket(null);
-            setPosition(null);
+            try {
+                // Remove from mock database
+                if (ticket?.id) {
+                    await removeTicket(clinicId, ticket.id);
+                }
+                // Clear localStorage reference
+                localStorage.removeItem(`filazero_ticket_${clinicId}`);
+                setTicket(null);
+                setPosition(null);
+                addToast('👋 Você saiu da fila com sucesso!', 'success');
+            } catch (e) {
+                console.error('Error leaving queue:', e);
+                addToast('Erro ao sair da fila', 'error');
+            }
         }
     };
 

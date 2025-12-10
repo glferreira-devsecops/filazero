@@ -145,16 +145,57 @@ export default function Landing() {
                 </div>
             </section>
 
-            {/* Minimalist Footer */}
-            <footer className="mt-auto py-8 text-center opacity-40 hover:opacity-100 transition-all duration-500">
-                <a
-                    href="https://www.linkedin.com/in/devferreirag/"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-xs text-muted hover:text-primary transition-all no-underline tracking-widest hover:tracking-super-wide uppercase font-medium"
-                >
-                    Gabriel L. Ferreira
-                </a>
+            {/* Premium Professional Footer */}
+            <footer className="mt-auto py-12 border-t border-white/5 bg-black/20 backdrop-blur-sm">
+                <div className="container flex flex-col items-center gap-6 text-center">
+
+                    {/* Developer Info */}
+                    <div className="flex flex-col gap-2">
+                        <p className="text-xs font-bold tracking-widest text-primary/80 uppercase mb-2">
+                            Desenvolvido por
+                        </p>
+                        <h3 className="text-xl font-bold bg-gradient-to-r from-white via-white to-white/50 bg-clip-text text-transparent">
+                            Gabriel Lima Ferreira
+                        </h3>
+                        <p className="text-sm text-muted">
+                            Full-Stack .Net Developer • React, Node.js & AWS
+                        </p>
+                        <p className="text-xs text-muted/60">
+                            Clean Code & Open-Source • Back End • LATAM • Remote
+                        </p>
+                    </div>
+
+                    {/* Social Links */}
+                    <div className="flex items-center justify-center gap-4 mt-4">
+                        <a
+                            href="https://www.linkedin.com/in/devferreirag/"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="p-3 rounded-full bg-white/5 hover:bg-[#0077b5] hover:text-white text-muted transition-all duration-300 group shadow-lg hover:shadow-[#0077b5]/20"
+                            title="LinkedIn"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
+                        </a>
+
+                        <a
+                            href="mailto:contato.ferreirag@outlook.com"
+                            className="p-3 rounded-full bg-white/5 hover:bg-[#EA4335] hover:text-white text-muted transition-all duration-300 group shadow-lg hover:shadow-[#EA4335]/20"
+                            title="Email"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                        </a>
+
+                        <a
+                            href="https://github.com/glferreira-devsecops"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="p-3 rounded-full bg-white/5 hover:bg-[#333] hover:text-white text-muted transition-all duration-300 group shadow-lg hover:shadow-white/10"
+                            title="GitHub"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C3.68.65 2.48 1 2.48 1A5.07 5.07 0 0 0 2.48 4.77 5.44 5.44 0 0 0 2.48 11.75c0 5.51 3.3 6.7 6.44 7a3.37 3.37 0 0 0 .94 2.61v2.25" /></svg>
+                        </a>
+                    </div>
+                </div>
             </footer>
         </div>
     );

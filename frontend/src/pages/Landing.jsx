@@ -1,10 +1,8 @@
-import { ArrowRight, Clock, QrCode, Sparkles, Users, Zap } from 'lucide-react';
+import { ArrowRight, Clock, Github, Layout, Linkedin, Mail, QrCode, ShieldCheck, Sparkles, Zap } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
-
-import { Layout, ShieldCheck } from 'lucide-react';
 
 export default function Landing() {
     const [clinicId, setClinicId] = useState('');
@@ -38,91 +36,113 @@ export default function Landing() {
     const demoUrl = `${window.location.origin}/clinic/demo`;
 
     return (
-        <div className="flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen relative overflow-x-hidden font-sans text-slate-50">
             {/* Navbar */}
-            <nav className="container flex-between py-6">
-                <div className="flex-center gap-sm">
-                    <div className="p-2 rounded-xl bg-primary text-white flex-center">
+            <nav className="container max-w-7xl mx-auto px-6 py-6 z-10 relative flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 text-white shadow-lg shadow-emerald-500/20">
                         <QrCode size={24} />
                     </div>
-                    <span className="font-bold text-lg tracking-tight">FilaZero</span>
+                    <span className="font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">
+                        FilaZero
+                    </span>
                 </div>
-                <button onClick={() => navigate('/login')} className="btn btn-ghost text-sm font-semibold">
+                <button
+                    onClick={() => navigate('/login')}
+                    className="px-5 py-2.5 text-sm font-semibold text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                >
                     Acesso Admin
                 </button>
             </nav>
 
             {/* Hero Section */}
-            <main className="container grid grid-2 gap-xl py-16 items-center">
+            <main className="container max-w-7xl mx-auto px-6 py-12 md:py-24 grid lg:grid-cols-2 gap-16 items-center flex-grow z-10 relative">
 
                 {/* Left Content */}
-                <div className="flex-col gap-md animate-slideUp">
-                    <div className="badge badge-waiting self-start">
+                <div className="flex flex-col gap-8 animate-slideUp">
+                    <div className="inline-flex self-start px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold uppercase tracking-wider shadow-sm">
                         🚀 Versão 2.0 Disponível
                     </div>
-                    <h1 className="text-display leading-tight">
+
+                    <h1 className="text-5xl md:text-7xl font-extrabold leading-[1.1] tracking-tight text-white drop-shadow-sm">
                         A evolução da <br />
-                        <span className="text-gradient">gestão de filas.</span>
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+                            gestão de filas.
+                        </span>
                     </h1>
-                    <p className="text-muted text-lg max-w-xl">
-                        Transforme a experiência dos seus pacientes. Elimine salas de espera lotadas com nossa orquestração inteligente.
+
+                    <p className="text-slate-400 text-lg md:text-xl max-w-xl leading-relaxed">
+                        Transforme a experiência dos seus pacientes. Elimine salas de espera lotadas com nossa orquestração inteligente e digital.
                     </p>
 
-                    <div className="flex-center gap-md justify-start mt-4">
-                        <button onClick={() => navigate('/clinic/demo')} className="btn btn-outline gap-sm">
-                            <Sparkles size={18} />
-                            Ver Demo
+                    <div className="flex items-center gap-6 mt-2">
+                        <button
+                            onClick={() => navigate('/clinic/demo')}
+                            className="group relative px-8 py-4 bg-white text-slate-900 rounded-2xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-3 shadow-xl shadow-white/5"
+                        >
+                            <Sparkles size={20} className="text-emerald-600 fill-emerald-600/20" />
+                            <span>Ver Demo</span>
                         </button>
-                        <div className="flex-center gap-xs text-sm text-muted">
-                            <Users size={16} />
-                            <span>+500 Clínicas</span>
+
+                        <div className="flex items-center gap-3 text-sm text-slate-500 font-medium">
+                            <div className="flex -space-x-3">
+                                <div className="w-8 h-8 rounded-full bg-slate-800 border-2 border-slate-950 flex items-center justify-center text-xs text-white">500</div>
+                                <div className="w-8 h-8 rounded-full bg-emerald-600 border-2 border-slate-950 flex items-center justify-center text-xs text-white">+</div>
+                            </div>
+                            <span>Clínicas Ativas</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Right Card (Join Form) */}
-                <div className="animate-scaleIn delay-200">
-                    <div className="card glass flex-col gap-lg border-t-white-10">
-                        <div className="text-center">
-                            <h2 className="text-2xl font-bold">Entrar na Fila</h2>
-                            <p className="text-muted text-sm">Digite o código da clínica ou escaneie</p>
+                <div className="animate-scaleIn delay-200 w-full max-w-md mx-auto lg:ml-auto">
+                    <div className="relative bg-[#0F172A]/80 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 shadow-2xl shadow-black/50 ring-1 ring-white/5">
+                        <div className="text-center mb-8">
+                            <h2 className="text-2xl font-bold text-white mb-2">Entrar na Fila</h2>
+                            <p className="text-slate-400 text-sm">Digite o código da clínica ou escaneie o QR</p>
                         </div>
 
-                        <form onSubmit={handleJoin} className="flex-col gap-md">
-                            <div className="input-group">
-                                <Layout size={20} />
+                        <form onSubmit={handleJoin} className="flex flex-col gap-4">
+                            <div className="relative group">
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-emerald-400 transition-colors">
+                                    <Layout size={20} />
+                                </span>
                                 <input
                                     type="text"
-                                    className="input pl-12 h-16 text-lg"
-                                    placeholder="Código da Clínica (ex: demo)"
+                                    className="w-full h-14 pl-12 bg-black/20 border border-white/10 rounded-xl text-white placeholder:text-slate-600 focus:outline-none focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20 transition-all font-medium"
+                                    placeholder="Código (ex: demo)"
                                     value={clinicId}
                                     onChange={(e) => setClinicId(e.target.value)}
                                     disabled={loading}
                                 />
                             </div>
+
                             <button
                                 type="submit"
-                                className="btn btn-primary btn-lg w-full h-16 text-lg"
+                                className="w-full h-14 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white rounded-xl font-bold shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wide text-sm"
                                 disabled={loading || !clinicId.trim()}
                             >
-                                {loading ? <span className="spinner" /> : <>Entrar Agora <ArrowRight /></>}
+                                {loading ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>Entrar Agora <ArrowRight size={20} /></>}
                             </button>
                         </form>
 
-                        <div className="divider text-xs text-muted">OU</div>
+                        <div className="relative my-8 text-center">
+                            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/5"></div></div>
+                            <div className="relative z-10 inline-block px-4 bg-[#0F172A] text-[10px] text-slate-500 uppercase font-bold tracking-widest">OU</div>
+                        </div>
 
                         <div className="text-center">
                             <button
                                 onClick={() => setShowQR(!showQR)}
-                                className="btn btn-ghost text-sm w-full"
+                                className="text-sm font-medium text-slate-400 hover:text-white transition-colors flex items-center justify-center gap-2 mx-auto"
                             >
-                                {showQR ? 'Esconder QR' : 'Mostrar QR Code'}
+                                <QrCode size={16} />
+                                {showQR ? 'Esconder QR Code' : 'Mostrar QR Code'}
                             </button>
+
                             {showQR && (
-                                <div className="flex-center mt-4 animate-fadeIn">
-                                    <div className="p-4 bg-white rounded-xl">
-                                        <QRCodeSVG value={demoUrl} size={180} />
-                                    </div>
+                                <div className="mt-6 p-4 bg-white rounded-2xl animate-fadeIn inline-block shadow-xl">
+                                    <QRCodeSVG value={demoUrl} size={160} />
                                 </div>
                             )}
                         </div>
@@ -131,69 +151,88 @@ export default function Landing() {
             </main>
 
             {/* Features Strip */}
-            <section className="container mt-8 mb-16">
-                <div className="grid grid-3 gap-lg">
+            <section className="container max-w-7xl mx-auto px-6 mb-24 z-10 relative">
+                <div className="grid md:grid-cols-3 gap-6">
                     {features.map((f, i) => (
-                        <div key={i} className="card flex-col gap-sm hover:border-primary transition-colors group">
-                            <div className="w-12 h-12 rounded-xl bg-emerald-500/10 text-primary flex-center group-hover:scale-110 transition-transform">
+                        <div key={i} className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-emerald-500/30 transition-all group cursor-default backdrop-blur-sm">
+                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 text-emerald-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-inner shadow-emerald-500/10">
                                 <f.icon size={24} />
                             </div>
-                            <h3 className="text-xl font-bold m-0">{f.title}</h3>
-                            <p className="text-muted text-sm m-0">{f.desc}</p>
+                            <h3 className="text-xl font-bold text-white mb-3">{f.title}</h3>
+                            <p className="text-slate-400 leading-relaxed text-sm">{f.desc}</p>
                         </div>
                     ))}
                 </div>
             </section>
 
             {/* Premium Professional Footer */}
-            <footer className="mt-auto py-12 border-t border-white/5 bg-black/20 backdrop-blur-sm">
-                <div className="container flex flex-col items-center gap-6 text-center">
+            <footer className="w-full border-t border-white/5 bg-[#050912]/90 backdrop-blur-xl py-16 z-20 relative mt-auto">
+                <div className="container max-w-5xl mx-auto px-6">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-12">
 
-                    {/* Developer Info */}
-                    <div className="flex flex-col gap-2">
-                        <p className="text-xs font-bold tracking-widest text-primary/80 uppercase mb-2">
-                            Desenvolvido por
-                        </p>
-                        <h3 className="text-xl font-bold bg-gradient-to-r from-white via-white to-white/50 bg-clip-text text-transparent">
-                            Gabriel Lima Ferreira
-                        </h3>
-                        <p className="text-sm text-muted">
-                            Full-Stack .Net Developer • React, Node.js & AWS
-                        </p>
-                        <p className="text-xs text-muted/60">
-                            Clean Code & Open-Source • Back End • LATAM • Remote
-                        </p>
+                        {/* Brand & Dev Info */}
+                        <div className="text-center md:text-left space-y-4">
+                            <div className="flex items-center justify-center md:justify-start gap-2.5 opacity-80 mb-6">
+                                <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/20">
+                                    <QrCode size={16} />
+                                </div>
+                                <span className="font-bold text-sm tracking-wide text-slate-300">FILAZERO SAÚDE</span>
+                            </div>
+
+                            <div>
+                                <h3 className="text-3xl font-bold text-white mb-2 tracking-tight">
+                                    Gabriel Lima Ferreira
+                                </h3>
+                                <p className="text-emerald-400 font-bold text-sm uppercase tracking-widest mb-1">
+                                    Full-Stack .NET Developer
+                                </p>
+                                <p className="text-slate-500 font-medium">
+                                    React • Node.js • AWS • Clean Architecture
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Social Connections */}
+                        <div className="flex gap-4">
+                            <a
+                                href="https://www.linkedin.com/in/devferreirag/"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="group relative flex items-center justify-center w-14 h-14 rounded-2xl bg-white/5 hover:bg-[#0077b5] text-slate-400 hover:text-white transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-[#0077b5]/30 overflow-hidden"
+                                aria-label="LinkedIn"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <Linkedin size={24} className="group-hover:scale-110 transition-transform relative z-10" />
+                            </a>
+
+                            <a
+                                href="mailto:contato.ferreirag@outlook.com"
+                                className="group relative flex items-center justify-center w-14 h-14 rounded-2xl bg-white/5 hover:bg-[#EA4335] text-slate-400 hover:text-white transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-[#EA4335]/30 overflow-hidden"
+                                aria-label="Email"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <Mail size={24} className="group-hover:scale-110 transition-transform relative z-10" />
+                            </a>
+
+                            <a
+                                href="https://github.com/glferreira-devsecops"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="group relative flex items-center justify-center w-14 h-14 rounded-2xl bg-white/5 hover:bg-[#171515] text-slate-400 hover:text-white transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-black/30 overflow-hidden"
+                                aria-label="GitHub"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <Github size={24} className="group-hover:scale-110 transition-transform relative z-10" />
+                            </a>
+                        </div>
                     </div>
 
-                    {/* Social Links */}
-                    <div className="flex items-center justify-center gap-4 mt-4">
-                        <a
-                            href="https://www.linkedin.com/in/devferreirag/"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="p-3 rounded-full bg-white/5 hover:bg-[#0077b5] hover:text-white text-muted transition-all duration-300 group shadow-lg hover:shadow-[#0077b5]/20"
-                            title="LinkedIn"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
-                        </a>
-
-                        <a
-                            href="mailto:contato.ferreirag@outlook.com"
-                            className="p-3 rounded-full bg-white/5 hover:bg-[#EA4335] hover:text-white text-muted transition-all duration-300 group shadow-lg hover:shadow-[#EA4335]/20"
-                            title="Email"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
-                        </a>
-
-                        <a
-                            href="https://github.com/glferreira-devsecops"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="p-3 rounded-full bg-white/5 hover:bg-[#333] hover:text-white text-muted transition-all duration-300 group shadow-lg hover:shadow-white/10"
-                            title="GitHub"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C3.68.65 2.48 1 2.48 1A5.07 5.07 0 0 0 2.48 4.77 5.44 5.44 0 0 0 2.48 11.75c0 5.51 3.3 6.7 6.44 7a3.37 3.37 0 0 0 .94 2.61v2.25" /></svg>
-                        </a>
+                    <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 text-[10px] text-slate-600 font-medium uppercase tracking-widest">
+                        <p>© 2024 FilaZero. All rights reserved.</p>
+                        <p className="flex items-center gap-2 text-emerald-500/80">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_currentColor]"></span>
+                            System Operational
+                        </p>
                     </div>
                 </div>
             </footer>

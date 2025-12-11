@@ -40,3 +40,5 @@ backend/pb_data/
 *.db-wal
 *.db-shm
 
+.vercel
+.env*.local

@@ -57,11 +57,11 @@ export default function Settings() {
     ];
 
     // Section component
-    const Section = ({ icon: Icon, title, children }) => (
+    const Section = ({ icon: IconComponent, title, children }) => (
         <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 space-y-4">
             <div className="flex items-center gap-3 pb-4 border-b border-white/5">
                 <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
-                    <Icon size={20} />
+                    <IconComponent size={20} />
                 </div>
                 <h2 className="text-lg font-bold text-white">{title}</h2>
             </div>

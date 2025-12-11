@@ -6,7 +6,7 @@ import { useToast } from '../context/ToastContext';
 import { subscribeToQueue } from '../services/ticketService';
 
 // Extracted StatCard component for performance
-const StatCard = ({ icon: Icon, label, value, subvalue, trend, colorClass = 'emerald' }) => (
+const StatCard = ({ icon: IconComponent, label, value, subvalue, trend, colorClass = 'emerald' }) => (
     <div className={`p-5 rounded-2xl bg-${colorClass}-500/10 border border-${colorClass}-500/20 relative overflow-hidden group hover:scale-[1.02] transition-transform`}>
         <div className={`absolute -top-4 -right-4 w-20 h-20 bg-${colorClass}-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500`}></div>
         <div className="flex items-center justify-between relative">
@@ -17,7 +17,7 @@ const StatCard = ({ icon: Icon, label, value, subvalue, trend, colorClass = 'eme
             </div>
             <div className="flex flex-col items-end gap-2">
                 <div className={`p-2.5 rounded-xl bg-${colorClass}-500/20 text-${colorClass}-400`}>
-                    <Icon size={22} />
+                    <IconComponent size={22} />
                 </div>
                 {trend !== undefined && (
                     <div className={`flex items-center gap-1 text-xs font-bold ${trend >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>

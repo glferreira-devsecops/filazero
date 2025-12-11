@@ -23,7 +23,7 @@ import { isDemoMode, preSeedDemoData } from './utils/demoUtils';
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
-      .then((reg) => console.log('✅ Service Worker registered'))
+      .then(() => console.log('✅ Service Worker registered'))
       .catch((err) => console.warn('⚠️ Service Worker failed:', err));
   });
 }

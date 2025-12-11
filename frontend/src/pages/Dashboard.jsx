@@ -103,11 +103,11 @@ export default function Dashboard() {
         window.location.reload();
     };
 
-    const StatCard = ({ icon: Icon, label, value, colorClass, borderClass, bgClass }) => (
+    const StatCard = ({ icon: IconComponent, label, value, colorClass, borderClass, bgClass }) => (
         <div className={`p-6 rounded-2xl border ${borderClass} ${bgClass} transition-all hover:scale-[1.02] hover:shadow-lg`}>
             <div className="flex items-center gap-4">
                 <div className={`p-3 rounded-xl border opacity-80 ${borderClass} bg-white/5`}>
-                    <Icon size={28} className={colorClass} />
+                    <IconComponent size={28} className={colorClass} />
                 </div>
                 <div>
                     <p className={`text-sm font-medium opacity-80 ${colorClass}`}>{label}</p>

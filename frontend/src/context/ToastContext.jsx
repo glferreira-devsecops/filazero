@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { createContext, useCallback, useContext, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 const ToastContext = createContext();
 
@@ -9,15 +9,31 @@ export function useToast() {
 
 export function ToastProvider({ children }) {
     const [toasts, setToasts] = useState([]);
+    const timersRef = useRef({});
 
-    const addToast = useCallback((message, type = 'info') => {
-        const id = Date.now();
-        setToasts(prev => [...prev, { id, message, type }]);
-        setTimeout(() => removeToast(id), 3000);
+    // Cleanup timers on unmount
+    useEffect(() => {
+        const timers = timersRef.current;
+        return () => {
+            Object.values(timers).forEach(clearTimeout);
+        };
     }, []);
 
     const removeToast = useCallback((id) => {
         setToasts(prev => prev.filter(t => t.id !== id));
+        if (timersRef.current[id]) {
+            clearTimeout(timersRef.current[id]);
+            delete timersRef.current[id];
+        }
+    }, []);
+
+    const addToast = useCallback((message, type = 'info') => {
+        const id = Date.now();
+        setToasts(prev => [...prev, { id, message, type }]);
+        timersRef.current[id] = setTimeout(() => {
+            setToasts(prev => prev.filter(t => t.id !== id));
+            delete timersRef.current[id];
+        }, 3000);
     }, []);
 
     return (

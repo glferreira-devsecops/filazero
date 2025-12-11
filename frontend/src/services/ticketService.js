@@ -30,7 +30,7 @@ if (!USE_MOCK) {
 
             if (!response.ok) throw new Error('PocketBase not healthy');
             console.log('✅ PocketBase connected at', url);
-        } catch (e) {
+        } catch {
             console.warn('⚠️ PocketBase not available, using mock mode');
             USE_MOCK = true;
         }

@@ -16,7 +16,7 @@ export default function Login() {
         try {
             await signInAsGuest();
             navigate('/admin');
-        } catch (e) {
+        } catch {
             setError("Erro ao entrar como visitante");
         } finally {
             setLoading(false);

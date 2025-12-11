@@ -43,7 +43,7 @@ export default function Reception() {
 
     // Sort waiting tickets by priority (emergency > priority > normal)
     const waitingTickets = sortByPriority(tickets.filter(t => t.status === 'waiting'));
-    const activeTickets = tickets.filter(t => ['called', 'in_service'].includes(t.status));
+    const activeTickets = tickets.filter(t => ['called', 'in_service', 'paused'].includes(t.status));
     const clinicUrl = `${window.location.origin}/clinic/${clinicId}`;
 
     // Priority labels and colors
@@ -378,6 +378,9 @@ export default function Reception() {
                                         {ticket.status === 'in_service' && (
                                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-emerald-500"></div>
                                         )}
+                                        {ticket.status === 'paused' && (
+                                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-slate-500"></div>
+                                        )}
 
                                         <div className="pl-3">
                                             <div className="flex items-center gap-3">
@@ -386,9 +389,11 @@ export default function Reception() {
                                                     ? 'bg-red-500/20 text-red-400 border-red-500/20'
                                                     : ticket.status === 'called'
                                                         ? 'bg-amber-500/20 text-amber-400 border-amber-500/20'
-                                                        : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20'
+                                                        : ticket.status === 'paused'
+                                                            ? 'bg-slate-500/20 text-slate-400 border-slate-500/20'
+                                                            : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20'
                                                     }`}>
-                                                    {isOverdue ? 'AGUARDANDO' : (ticket.status === 'called' ? 'CHAMANDO' : 'ATENDENDO')}
+                                                    {isOverdue ? 'AGUARDANDO' : ticket.status === 'called' ? 'CHAMANDO' : ticket.status === 'paused' ? 'PAUSADO' : 'ATENDENDO'}
                                                 </span>
                                                 {isOverdue && (
                                                     <span className="flex items-center gap-1 px-2 py-0.5 rounded bg-red-500/20 text-red-400 text-[10px] font-bold border border-red-500/20 animate-pulse">
@@ -414,6 +419,13 @@ export default function Reception() {
                                                         <UserX size={20} />
                                                     </button>
                                                     <button
+                                                        onClick={() => handlePause(ticket.id)}
+                                                        className="p-3 rounded-xl bg-slate-500/10 hover:bg-slate-500/20 text-slate-400 hover:text-slate-300 border border-slate-500/20 transition-all active:scale-95"
+                                                        title="Pausar (paciente saiu)"
+                                                    >
+                                                        <Pause size={20} />
+                                                    </button>
+                                                    <button
                                                         onClick={() => handleRecall(ticket.id)}
                                                         className="p-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 hover:text-amber-300 border border-amber-500/20 transition-all active:scale-95"
                                                         title="Chamar Novamente"
@@ -428,6 +440,16 @@ export default function Reception() {
                                                         <Play size={20} fill="currentColor" />
                                                     </button>
                                                 </>
+                                            )}
+                                            {ticket.status === 'paused' && (
+                                                <button
+                                                    onClick={() => handleResume(ticket.id)}
+                                                    className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all active:scale-95 flex items-center gap-2"
+                                                    title="Retomar"
+                                                >
+                                                    <Play size={18} />
+                                                    RETOMAR
+                                                </button>
                                             )}
                                             <button
                                                 onClick={() => handleStatusChange(ticket.id, 'done')}

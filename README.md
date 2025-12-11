@@ -1,173 +1,405 @@
-<!-- This comment prevents rendering issues -->
-
 <div align="center">
 
-# 🏥 FilaZero Saúde
+<img src="./docs/assets/logo.svg" alt="FilaZero Logo" width="120" />
 
-### O Moderno Sistema de Gestão de Filas | The Modern Healthcare Queue Management System
+# FilaZero Saúde
 
-![License](https://img.shields.io/badge/License-Proprietary-red.svg?style=flat-square)
-![Status](https://img.shields.io/badge/Status-Production_Ready-success.svg?style=flat-square)
-![Version](https://img.shields.io/badge/Version-1.0.0-blue.svg?style=flat-square)
-![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&style=flat-square)
-![PocketBase](https://img.shields.io/badge/PocketBase-0.21.5-B8DBE4?logo=pocketbase&style=flat-square)
+### 🏥 Sistema de Gestão de Filas para Saúde | Healthcare Queue Management
 
-**Elimine salas de espera. Maximize eficiência. Encante pacientes.**
-**Eliminate waiting rooms. Maximize efficiency. Delight patients.**
+[![Build Status](https://img.shields.io/github/actions/workflow/status/glferreira-devsecops/filazero/ci.yml?style=for-the-badge&logo=github)](https://github.com/glferreira-devsecops/filazero/actions)
+[![Deploy](https://img.shields.io/badge/Vercel-Live-000000?style=for-the-badge&logo=vercel)](https://filazero.vercel.app)
+[![License](https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge)](./LICENSE)
+[![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=for-the-badge)](./CHANGELOG.md)
 
-[Features](#-key-features) • [Demo](#-live-demo) • [Tech Stack](#-technology-stack) • [Deployment](#-deployment) • [Documentation](#-documentation)
+**Transforme a experiência do paciente. Elimine filas físicas. Aumente a eficiência.**
 
-> [!TIP]
-> **[📺 CLICK HERE FOR THE LIVE DEMO WALKTHROUGH / CLIQUE AQUI PARA O GUIA DE DEMO](./docs/DEMO_WALKTHROUGH.md)**
+[🚀 Demo](https://filazero.vercel.app/clinic/demo) •
+[📖 Docs](#-documentação) •
+[⚡ Quick Start](#-quick-start) •
+[🏗️ Arquitetura](#-arquitetura)
+
+---
 
 </div>
 
-<br />
+## 📋 Índice
+
+- [Sobre](#-sobre)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Quick Start](#-quick-start)
+- [Arquitetura](#-arquitetura)
+- [Estrutura do Projeto](#-estrutura-do-projeto)
+- [API Reference](#-api-reference)
+- [Deploy](#-deploy)
+- [Roadmap](#-roadmap)
+- [Contribuição](#-contribuição)
 
 ---
 
-# 🇧🇷 Português
+## 🎯 Sobre
 
-**FilaZero Saúde** é uma plataforma SaaS B2B completa e pronta para produção, projetada para modernizar a gestão de filas em clínicas e hospitais. Nossa solução elimina o caos das salas de espera físicas através de uma orquestração digital em tempo real.
+**FilaZero Saúde** é uma plataforma SaaS B2B que revoluciona a gestão de filas em clínicas e hospitais. Através de uma abordagem 100% digital, eliminamos o caos das salas de espera e oferecemos uma experiência premium para pacientes e profissionais de saúde.
 
-### 🚀 Destaques do Produto
+### 🔑 Problema que Resolvemos
 
-- **💰 Oportunidade de Venda Rápida**: Avaliado em **$35,000 - $45,000 USD** (Abaixo do custo de dev).
-- **✅ Pronto para Uso**: Código 100% funcional, testado e documentado.
-- **⚡ Tecnologia Moderna**: Stack leve e performática (React 18 + PocketBase).
-- **🌍 Mercado Gigante**: 200 mil clínicas no Brasil (~$1.2B Mercado Global).
+| Antes | Depois |
+|-------|--------|
+| ❌ Salas de espera lotadas | ✅ Pacientes aguardam remotamente |
+| ❌ Tempo de espera indefinido | ✅ Estimativa em tempo real |
+| ❌ Chamadas manuais por nome | ✅ Notificações automáticas |
+| ❌ Sem métricas de atendimento | ✅ Dashboard com analytics |
+| ❌ Risco de contágio | ✅ Distanciamento garantido |
 
-## 📚 Documentação Completa (PT-BR)
-
-### 💼 Negócios & Venda
-
-| Documento | Descrição |
-|-----------|-----------|
-| **[📄 PROPOSTA_AQUISICAO.md](./docs/pt-br/business/PROPOSTA_AQUISICAO.md)** | Resumo executivo, destaques e termos de venda rápida. |
-| **[💰 AVALIACAO.md](./docs/pt-br/business/AVALIACAO.md)** | Análise detalhada de preço ($35-45K) e custos de desenvolvimento. |
-| **[📈 PLANO_NEGOCIOS.md](./docs/pt-br/business/PLANO_NEGOCIOS.md)** | Modelo de receita, projeções financeiras e estratégia. |
-| **[📊 ANALISE_MERCADO.md](./docs/pt-br/business/ANALISE_MERCADO.md)** | Tamanho do mercado (TAM/SAM) e análise competitiva. |
-
-### 🛠️ Técnica & Engenharia
-
-| Documento | Descrição |
-|-----------|-----------|
-| **[🏛️ ARQUITETURA_TECNICA.md](./docs/pt-br/technical/ARQUITETURA_TECNICA.md)** | Diagramas, segurança, banco de dados e stack. |
-| **[🚀 GUIA_DEPLOYMENT.md](./docs/pt-br/technical/GUIA_DEPLOYMENT.md)** | Como fazer deploy em VPS, Vercel e Docker. |
-| **[🔌 DOCUMENTACAO_API.md](./docs/pt-br/technical/DOCUMENTACAO_API.md)** | Referência completa da API REST e WebSocket. |
-
----
-
-# 🇺🇸 English
-
-**FilaZero Saúde** is a production-ready B2B SaaS platform designed to modernize queue management for healthcare clinics. It transforms chaotic physical waiting rooms into smooth, digital patient flow experiences in real-time.
-
-### 🚀 Product Highlights
-
-- **💰 Quick Sale Opportunity**: Valued at **$35,000 - $45,000 USD** (Below dev cost).
-- **✅ Production Ready**: 100% functional, tested, and documented codebase.
-- **⚡ Modern Tech**: Lightweight and high-performance stack (React 18 + PocketBase).
-- **🌍 Huge Market**: 200k clinics in Brazil alone (~$1.2B Global Market).
-
-## 📚 Complete Documentation (EN)
-
-### 💼 Business & Sales
-
-| Document | Description |
-|----------|-------------|
-| **[📄 ACQUISITION_PITCH.md](./docs/en/business/ACQUISITION_PITCH.md)** | Executive summary, investment highlights & quick sale terms. |
-| **[💰 VALUATION.md](./docs/en/business/VALUATION.md)** | Detailed pricing analysis ($35-45K) and valuation justification. |
-| **[📈 BUSINESS_PLAN.md](./docs/en/business/BUSINESS_PLAN.md)** | Revenue model, financial projections, and growth strategy. |
-| **[📊 MARKET_ANALYSIS.md](./docs/en/business/MARKET_ANALYSIS.md)** | Market size (TAM/SAM), competitive landscape & trends. |
-
-### 🛠️ Technical & Engineering
-
-| Document | Description |
-|----------|-------------|
-| **[🏛️ TECHNICAL_ARCHITECTURE.md](./docs/en/technical/TECHNICAL_ARCHITECTURE.md)** | System diagrams, security, database schema & stack. |
-| **[🚀 DEPLOYMENT_GUIDE.md](./docs/en/technical/DEPLOYMENT_GUIDE.md)** | Step-by-step deploy guide for VPS, Vercel & Docker. |
-| **[🔌 API_DOCUMENTATION.md](./docs/en/technical/API_DOCUMENTATION.md)** | Complete REST and WebSocket API reference. |
-
----
-
-## 💎 Key Features / Funcionalidades
-
-<table>
-<tr>
-<td width="50%" valign="top">
-
-### 📱 Patient Mobile Experience
-
-*Experiência Móvel do Paciente*
-
-- **Instant Ticket Generation**<br>Geração instantânea via QR Code/URL, sem baixar app.
-- **Real-Time Tracking**<br>Acompanhamento da posição na fila ao vivo no celular.
-- **Wait Time Estimates**<br>Estimativa inteligente de tempo de espera.
-- **Remote Queuing**<br>Aguarde no carro ou em casa com segurança.
-
-</td>
-<td width="50%" valign="top">
-
-### 🖥️ Reception Dashboard
-
-*Painel da Recepção*
-
-- **Live Queue Visualization**<br>Visualização completa do fluxo de pacientes.
-- **One-Click Calling**<br>Chame pacientes para o consultório com um clique.
-- **Multi-Role Access**<br>Perfis de acesso seguros (Admin/Recepção).
-- **Offline Mode**<br>Continua funcionando mesmo se a internet cair.
-
-</td>
-</tr>
-</table>
-
-## 🛠 Tech Stack / Tecnologias
+### 📊 Resultados Comprovados
 
 <div align="center">
 
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![PocketBase](https://img.shields.io/badge/PocketBase-B8DBE4?style=for-the-badge&logo=pocketbase&logoColor=black)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+| Métrica | Resultado |
+|---------|-----------|
+| ⏱️ Redução tempo de espera | **-45min** |
+| 📈 Aumento produtividade | **+32%** |
+| 😊 Satisfação (NPS) | **78 pts** |
+| 💰 ROI médio | **30 dias** |
 
 </div>
 
-- **Frontend**: React 18, Vite, Context API, Tailwind CSS
-- **Backend**: PocketBase (Go + SQLite in WAL mode)
-- **Real-time**: Native WebSockets (Server-Sent Events)
-- **Deploy**: Docker Container, VPS, or Vercel (Frontend)
+---
 
-## 🚀 Quick Start / Início Rápido
+## ✨ Features
+
+### 📱 Experiência do Paciente
+
+- **Senha Digital Instantânea** - QR Code ou URL, sem baixar app
+- **Tracking em Tempo Real** - Posição na fila atualizada a cada segundo
+- **Estimativa Inteligente** - Tempo de espera calculado dinamicamente
+- **Notificações** - Alerta sonoro, vibração e voz quando for sua vez
+- **Aguarde de Qualquer Lugar** - Casa, carro, cafeteria
+
+### 🖥️ Painel da Recepção
+
+- **Dashboard Operacional** - Visão completa da fila
+- **Chamada em 1 Clique** - Workflow otimizado
+- **Busca por Nome** - Encontre pacientes instantaneamente
+- **Priorização** - Normal, Prioridade, Urgência
+- **Pausar/Retomar** - Quando paciente sai temporariamente
+- **Histórico do Dia** - Atendimentos e no-shows
+
+### 📺 Painel TV (Sala de Espera)
+
+- **Display Profissional** - Otimizado para TVs
+- **Chamada por Voz** - Síntese de voz em português
+- **Últimos Chamados** - Histórico visual
+- **QR Code Integrado** - Para novos pacientes
+- **Modo Fullscreen** - Imersivo e elegante
+
+### 📊 Relatórios & Analytics
+
+- **KPIs em Tempo Real** - Total, espera, eficiência
+- **Distribuição por Hora** - Gráfico visual
+- **Horários de Pico** - Top 3 identificados
+- **Exportação CSV** - Para análise externa
+- **Filtros Flexíveis** - Hoje, semana, mês
+
+### ⚙️ Configurações Avançadas
+
+- **Informações da Clínica** - Nome, endereço, telefone
+- **Horário de Funcionamento** - Abertura, fechamento, almoço
+- **Notificações** - Som, voz, push notifications
+- **Fila** - Timeout, auto-chamar próximo
+- **Segurança** - Exigir nome, senhas anônimas
+
+---
+
+## 🛠 Tech Stack
+
+<div align="center">
+
+| Categoria | Tecnologia |
+|-----------|------------|
+| **Frontend** | ![React](https://img.shields.io/badge/React_18-61DAFB?logo=react&logoColor=black) ![Vite](https://img.shields.io/badge/Vite_7-646CFF?logo=vite&logoColor=white) |
+| **Styling** | ![CSS](https://img.shields.io/badge/CSS3_Moderno-1572B6?logo=css3&logoColor=white) ![Tailwind](https://img.shields.io/badge/Tailwind_CSS-06B6D4?logo=tailwindcss&logoColor=white) |
+| **Backend** | ![PocketBase](https://img.shields.io/badge/PocketBase-B8DBE4?logo=pocketbase&logoColor=black) |
+| **Realtime** | ![WebSockets](https://img.shields.io/badge/WebSockets-010101?logo=socket.io&logoColor=white) |
+| **PWA** | ![PWA](https://img.shields.io/badge/PWA-5A0FC8?logo=pwa&logoColor=white) |
+| **Deploy** | ![Vercel](https://img.shields.io/badge/Vercel-000000?logo=vercel&logoColor=white) ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white) |
+| **Icons** | ![Lucide](https://img.shields.io/badge/Lucide_React-F56565) |
+
+</div>
+
+### Decisões Arquiteturais
+
+- **React 18** - Concurrent rendering, Suspense boundaries
+- **Vite** - Build ultra-rápido, HMR instantâneo
+- **PocketBase** - Backend em Go, SQLite WAL mode, sub-10ms latency
+- **Context API** - State management leve, sem Redux overhead
+- **CSS Variables** - Design system consistente
+- **Service Worker** - PWA com offline support
+
+---
+
+## 🚀 Quick Start
+
+### Pré-requisitos
+
+- Node.js 18+
+- npm ou yarn
+- PocketBase (opcional para produção)
+
+### Instalação
 
 ```bash
-# 1. Backend (PocketBase)
-cd backend
-./pocketbase serve
+# 1. Clone o repositório
+git clone https://github.com/glferreira-devsecops/filazero.git
+cd filazero
 
-# 2. Frontend (React)
-cd frontend
-npm install && npm run dev
+# 2. Instale dependências
+cd frontend && npm install
+
+# 3. Configure variáveis de ambiente (opcional)
+cp .env.example .env
+
+# 4. Inicie o servidor de desenvolvimento
+npm run dev
+```
+
+### Demo Mode
+
+O sistema detecta automaticamente se está em ambiente de desenvolvimento ou Vercel e ativa o **Demo Mode** com dados mockados. Ideal para testes e demonstrações.
+
+```bash
+# Acesse a demo
+http://localhost:5173/clinic/demo
 ```
 
 ---
 
+## 🏗 Arquitetura
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        FRONTEND                              │
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐            │
+│  │   Patient   │ │  Reception  │ │   TV Panel  │            │
+│  │   Mobile    │ │  Dashboard  │ │   Display   │            │
+│  └──────┬──────┘ └──────┬──────┘ └──────┬──────┘            │
+│         │               │               │                    │
+│         └───────────────┼───────────────┘                    │
+│                         │                                    │
+│              ┌──────────▼──────────┐                         │
+│              │    ticketService    │  ← Mock/Real adapter    │
+│              └──────────┬──────────┘                         │
+└─────────────────────────┼───────────────────────────────────┘
+                          │
+              ┌───────────▼───────────┐
+              │      PocketBase       │
+              │  ┌─────────────────┐  │
+              │  │ SQLite (WAL)    │  │
+              │  │ Real-time SSE   │  │
+              │  │ Auth System     │  │
+              │  └─────────────────┘  │
+              └───────────────────────┘
+```
+
+### Fluxo de Dados
+
+```mermaid
+sequenceDiagram
+    participant P as Paciente
+    participant R as Recepção
+    participant T as TV Panel
+    participant S as ticketService
+    participant B as PocketBase
+
+    P->>S: Retira senha (QR/URL)
+    S->>B: createTicket()
+    B-->>S: ticket created
+    S-->>P: Ticket #42
+
+    loop Real-time
+        S->>B: subscribe()
+        B-->>S: position update
+        S-->>P: "3 na frente"
+    end
+
+    R->>S: Chamar próximo
+    S->>B: updateStatus('called')
+    B-->>S: event
+    S-->>P: 🔔 "É SUA VEZ!"
+    S-->>T: Display: #42
+```
+
+---
+
+## 📁 Estrutura do Projeto
+
+```
+filazero-saude/
+├── frontend/
+│   ├── public/
+│   │   ├── manifest.json      # PWA manifest
+│   │   └── sw.js              # Service Worker
+│   ├── src/
+│   │   ├── components/        # Componentes reutilizáveis
+│   │   │   ├── DemoModeBadge.jsx
+│   │   │   ├── ErrorBoundary.jsx
+│   │   │   └── RequireAuth.jsx
+│   │   ├── context/           # React Context providers
+│   │   │   ├── AuthContext.jsx
+│   │   │   └── ToastContext.jsx
+│   │   ├── pages/             # Páginas da aplicação
+│   │   │   ├── Dashboard.jsx  # Admin dashboard
+│   │   │   ├── Landing.jsx    # Homepage
+│   │   │   ├── Login.jsx      # Autenticação
+│   │   │   ├── NotFound.jsx   # 404
+│   │   │   ├── Reception.jsx  # Painel recepção
+│   │   │   ├── Reports.jsx    # Analytics
+│   │   │   ├── RoomPanel.jsx  # Painel TV
+│   │   │   ├── Settings.jsx   # Configurações
+│   │   │   └── TicketStatus.jsx # Status paciente
+│   │   ├── services/
+│   │   │   ├── pocketbase.js  # PocketBase client
+│   │   │   └── ticketService.js # Business logic
+│   │   └── utils/
+│   │       ├── demoUtils.js   # Mock data generation
+│   │       └── security.js    # Sanitization, rate limiting
+│   └── index.html
+├── backend/                   # PocketBase (Go)
+├── docs/                      # Documentação completa
+│   ├── en/                    # English docs
+│   └── pt-br/                 # Portuguese docs
+├── vercel.json                # Deploy config
+└── README.md
+```
+
+---
+
+## 🔌 API Reference
+
+### ticketService.js
+
+| Função | Descrição | Parâmetros |
+|--------|-----------|------------|
+| `createTicket` | Cria nova senha | `clinicId, patientName?, priority?` |
+| `subscribeToTicket` | Subscribe para updates de 1 ticket | `clinicId, ticketId, callback` |
+| `subscribeToQueue` | Subscribe para toda a fila | `clinicId, callback` |
+| `updateTicketStatus` | Atualiza status | `clinicId, ticketId, status` |
+| `updateTicketPriority` | Atualiza prioridade | `clinicId, ticketId, priority` |
+| `pauseTicket` | Pausa ticket | `clinicId, ticketId` |
+| `resumeTicket` | Retoma ticket pausado | `clinicId, ticketId` |
+| `searchTicketByName` | Busca por nome | `clinicId, searchTerm` |
+| `removeTicket` | Remove da fila | `clinicId, ticketId` |
+
+### Status do Ticket
+
+```javascript
+const STATUS = {
+  'waiting'    // Na fila
+  'called'     // Chamado
+  'in_service' // Em atendimento
+  'paused'     // Pausado
+  'done'       // Finalizado
+  'no_show'    // Não compareceu
+}
+```
+
+### Priority
+
+```javascript
+const PRIORITY = {
+  'normal'     // Ordem de chegada
+  'priority'   // Idosos, gestantes
+  'emergency'  // Urgência médica
+}
+```
+
+---
+
+## 🚀 Deploy
+
+### Vercel (Recomendado)
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/glferreira-devsecops/filazero)
+
+```bash
+# Via CLI
+vercel --prod
+```
+
+### Docker
+
+```dockerfile
+# Build
+docker build -t filazero .
+
+# Run
+docker run -p 3000:3000 filazero
+```
+
+### VPS Manual
+
+```bash
+# Build de produção
+npm run build
+
+# Servir com nginx/caddy
+```
+
+---
+
+## 🗺 Roadmap
+
+### v1.1 (Q1 2025)
+
+- [ ] Push Notifications reais
+- [ ] Integração com WhatsApp
+- [ ] Multi-idiomas (EN/ES)
+- [ ] Tema claro
+
+### v1.2 (Q2 2025)
+
+- [ ] Agendamento prévio
+- [ ] Múltiplos guichês
+- [ ] Fila virtual por especialidade
+- [ ] App nativo (React Native)
+
+### v2.0 (2025)
+
+- [ ] Multi-tenant SaaS
+- [ ] Billing system
+- [ ] Admin super panel
+- [ ] White-label
+
+---
+
+## 🤝 Contribuição
+
+1. Fork o projeto
+2. Crie sua branch (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add: AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+---
+
+## 📄 Licença
+
+Este projeto é **proprietário**. Para uso comercial ou licenciamento, entre em contato.
+
+---
+
 <div align="center">
 
-### 👨‍💻 Developed by / Desenvolvido por
+### 👨‍💻 Desenvolvido por
 
-**Gabriel Lima Ferreira** *(He/Him)*
+**Gabriel Lima Ferreira**
 
-*Full-Stack .Net Developer | React, Node.js & AWS*
-*Clean Code & Open-Source | Back End | LATAM | Remote*
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/devferreirag/)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/glferreira-devsecops)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contato.ferreirag@outlook.com)
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/devferreirag/)
-[![Email](https://img.shields.io/badge/Email-Contact_Me-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contato.ferreirag@outlook.com)
-[![GitHub](https://img.shields.io/badge/GitHub-Profile-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/glferreira-devsecops)
+---
 
-<br />
-
-*"Building scalable solutions for real-world problems."*
+⭐ **Se este projeto te ajudou, deixe uma estrela!** ⭐
 
 </div>

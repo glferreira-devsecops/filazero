@@ -52,12 +52,14 @@ const normalizeTicket = (ticket) => {
     const t = { ...ticket };
 
     // PocketBase returns ISO strings, convert to Date
-    ['created', 'updated', 'calledAt', 'startedAt', 'finishedAt'].forEach(field => {
+    const dateFields = ['created', 'updated', 'createdAt', 'calledAt', 'startedAt', 'finishedAt', 'pausedAt', 'resumedAt', 'noShowAt'];
+    dateFields.forEach(field => {
         if (t[field] && typeof t[field] === 'string') {
             t[field] = new Date(t[field]);
         }
     });
 
+    // Normalize PocketBase 'created' to 'createdAt' for consistency
     if (t.created && !t.createdAt) {
         t.createdAt = t.created;
     }
@@ -233,19 +235,17 @@ export const subscribeToQueue = (clinicId, callback) => {
 
     const fetchQueue = async () => {
         try {
-            const result = await pb.collection('tickets').getList(1, 100, {
-                filter: `clinicId = "${clinicId}" && (status = "waiting" || status = "called" || status = "in_service")`,
-                sort: 'created'
+            // Fetch all tickets for this clinic (including done/no_show for history)
+            const result = await pb.collection('tickets').getList(1, 200, {
+                filter: `clinicId = "${clinicId}"`,
+                sort: '-created' // Newest first
             });
             callback(result.items.map(normalizeTicket));
         } catch (e) {
             console.error('Queue fetch error:', e);
-            // Fallback to mock if fetch fails (e.g. auth error) and clinic is demo-like
             if (!USE_MOCK) {
                 console.warn("Switching to mock mode due to fetch error");
                 USE_MOCK = true;
-                // We can't easily "retry" this subscription closure, but subsequent calls will use mock.
-                // For now, let's try to return mock data immediately if we have it?
                 const dbStr = getMockDb();
                 callback((dbStr.queues[clinicId] || []).map(normalizeTicket));
             } else {

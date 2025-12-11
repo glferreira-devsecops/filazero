@@ -1,4 +1,4 @@
-import { Activity, BarChart3, CheckCircle, Clock, ExternalLink, History, RefreshCw, Trash2, TrendingUp, UserX, Users, Zap } from 'lucide-react';
+import { Activity, BarChart3, CheckCircle, Clock, ExternalLink, History, RefreshCw, Settings, Trash2, TrendingUp, UserX, Users, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';

@@ -1,4 +1,4 @@
-import { AlertTriangle, CheckCircle, Clock, LayoutDashboard, Megaphone, Monitor, Play, QrCode, RefreshCw, Repeat2, Search, User, UserX, X, Zap } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Clock, LayoutDashboard, Megaphone, Monitor, Pause, Play, QrCode, RefreshCw, Repeat2, Search, User, UserX, X, Zap } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

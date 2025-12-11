@@ -1,8 +1,9 @@
 import { AlertCircle, Bell, BellOff, CheckCircle, Clock, LogOut, Ticket, Users, Volume2, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import PrintTicket from '../components/PrintTicket';
 import { useToast } from '../context/ToastContext';
-import { createTicket, removeTicket } from '../services/ticketService';
+import { createTicket, getQueuePosition, removeTicket, subscribeToTicket } from '../services/ticketService';
 import { sanitizeClinicId } from '../utils/security';
 
 export default function TicketStatus() {

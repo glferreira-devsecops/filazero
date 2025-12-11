@@ -12,6 +12,7 @@ import RoomPanel from './pages/RoomPanel';
 import Settings from './pages/Settings';
 import TicketStatus from './pages/TicketStatus';
 
+import { SettingsProvider } from './context/SettingsContext';
 import { ToastProvider } from './context/ToastContext';
 
 import { useEffect } from 'react';

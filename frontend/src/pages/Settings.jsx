@@ -26,7 +26,7 @@ export default function Settings() {
             // In a real app, we might also sync to backend here
             await new Promise(r => setTimeout(r, 500));
             addToast('✅ Configurações salvas!', 'success');
-        } catch (e) {
+        } catch {
             addToast('Erro ao salvar', 'error');
         } finally {
             setSaving(false);
@@ -100,8 +100,14 @@ export default function Settings() {
     );
 
     return (
-        <div className="min-h-screen bg-[#0f172a] text-slate-50 font-sans p-6 pb-24">
-            <div className="container max-w-4xl mx-auto space-y-8">
+        <div className="min-h-screen bg-[#0f172a] text-slate-50 font-sans p-6 pb-24 relative overflow-hidden">
+            {/* Ambient Background Effects */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+                <div className="absolute -top-[15%] -left-[5%] w-[40%] h-[40%] bg-purple-500/10 rounded-full blur-[120px] animate-pulse"></div>
+                <div className="absolute -bottom-[15%] -right-[5%] w-[35%] h-[35%] bg-emerald-500/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+            </div>
+
+            <div className="container max-w-4xl mx-auto space-y-8 relative z-10">
 
                 {/* Header */}
                 <header className="flex flex-col md:flex-row items-center justify-between gap-6 p-6 rounded-3xl bg-white/[0.03] border border-white/5">

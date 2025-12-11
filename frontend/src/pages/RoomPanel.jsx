@@ -2,6 +2,7 @@ import { Activity, Clock, Expand, Minimize, Volume2, VolumeX } from 'lucide-reac
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
 import { subscribeToQueue } from '../services/ticketService';
 
 export default function RoomPanel() {

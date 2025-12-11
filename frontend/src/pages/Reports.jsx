@@ -5,6 +5,52 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { subscribeToQueue } from '../services/ticketService';
 
+// Extracted StatCard component for performance
+const StatCard = ({ icon: Icon, label, value, subvalue, trend, colorClass = 'emerald' }) => (
+    <div className={`p-5 rounded-2xl bg-${colorClass}-500/10 border border-${colorClass}-500/20 relative overflow-hidden group hover:scale-[1.02] transition-transform`}>
+        <div className={`absolute -top-4 -right-4 w-20 h-20 bg-${colorClass}-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500`}></div>
+        <div className="flex items-center justify-between relative">
+            <div>
+                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">{label}</p>
+                <p className={`text-3xl font-black text-${colorClass}-400`}>{value}</p>
+                {subvalue && <p className="text-slate-500 text-xs mt-1">{subvalue}</p>}
+            </div>
+            <div className="flex flex-col items-end gap-2">
+                <div className={`p-2.5 rounded-xl bg-${colorClass}-500/20 text-${colorClass}-400`}>
+                    <Icon size={22} />
+                </div>
+                {trend !== undefined && (
+                    <div className={`flex items-center gap-1 text-xs font-bold ${trend >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {trend >= 0 ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
+                        {Math.abs(trend)}%
+                    </div>
+                )}
+            </div>
+        </div>
+    </div>
+);
+
+// Extracted HourlyChart component for performance
+const HourlyChart = ({ data }) => {
+    const max = Math.max(...data, 1);
+    const workHours = data.slice(7, 19); // 7am to 7pm
+
+    return (
+        <div className="flex items-end gap-1 h-32">
+            {workHours.map((count, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                    <div
+                        className="w-full bg-emerald-500/50 hover:bg-emerald-500 rounded-t-sm transition-all cursor-pointer"
+                        style={{ height: `${(count / max) * 100}%`, minHeight: count > 0 ? '4px' : '0' }}
+                        title={`${7 + i}h: ${count} tickets`}
+                    ></div>
+                    <span className="text-[10px] text-slate-500">{7 + i}</span>
+                </div>
+            ))}
+        </div>
+    );
+};
+
 /**
  * Reports Page
  * Analytics dashboard with charts and insights
@@ -22,7 +68,6 @@ export default function Reports() {
     // Subscribe to queue data
     useEffect(() => {
         if (!clinicId) return;
-        setLoading(true);
         const unsubscribe = subscribeToQueue(clinicId, (data) => {
             setTickets(data);
             setLoading(false);
@@ -148,52 +193,6 @@ export default function Reports() {
         addToast('📊 Relatório exportado!', 'success');
     };
 
-    // Stat Card component
-    const StatCard = ({ icon: Icon, label, value, subvalue, trend, colorClass = 'emerald' }) => (
-        <div className={`p-5 rounded-2xl bg-${colorClass}-500/10 border border-${colorClass}-500/20 relative overflow-hidden group`}>
-            <div className={`absolute -top-4 -right-4 w-20 h-20 bg-${colorClass}-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500`}></div>
-            <div className="flex items-center justify-between relative">
-                <div>
-                    <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">{label}</p>
-                    <p className={`text-3xl font-black text-${colorClass}-400`}>{value}</p>
-                    {subvalue && <p className="text-slate-500 text-xs mt-1">{subvalue}</p>}
-                </div>
-                <div className="flex flex-col items-end gap-2">
-                    <div className={`p-2.5 rounded-xl bg-${colorClass}-500/20 text-${colorClass}-400`}>
-                        <Icon size={22} />
-                    </div>
-                    {trend !== undefined && (
-                        <div className={`flex items-center gap-1 text-xs font-bold ${trend >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                            {trend >= 0 ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
-                            {Math.abs(trend)}%
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-
-    // Simple bar chart
-    const HourlyChart = ({ data }) => {
-        const max = Math.max(...data, 1);
-        const workHours = data.slice(7, 19); // 7am to 7pm
-
-        return (
-            <div className="flex items-end gap-1 h-32">
-                {workHours.map((count, i) => (
-                    <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                        <div
-                            className="w-full bg-emerald-500/50 hover:bg-emerald-500 rounded-t-sm transition-all cursor-pointer"
-                            style={{ height: `${(count / max) * 100}%`, minHeight: count > 0 ? '4px' : '0' }}
-                            title={`${7 + i}h: ${count} tickets`}
-                        ></div>
-                        <span className="text-[10px] text-slate-500">{7 + i}</span>
-                    </div>
-                ))}
-            </div>
-        );
-    };
-
     if (loading) {
         return (
             <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
@@ -203,8 +202,14 @@ export default function Reports() {
     }
 
     return (
-        <div className="min-h-screen bg-[#0f172a] text-slate-50 font-sans p-6 pb-24">
-            <div className="container max-w-7xl mx-auto space-y-8">
+        <div className="min-h-screen bg-[#0f172a] text-slate-50 font-sans p-6 pb-24 relative overflow-hidden">
+            {/* Ambient Background Effects */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+                <div className="absolute -top-[20%] -right-[15%] w-[45%] h-[45%] bg-blue-500/10 rounded-full blur-[120px] animate-pulse"></div>
+                <div className="absolute -bottom-[20%] -left-[15%] w-[40%] h-[40%] bg-purple-500/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+            </div>
+
+            <div className="container max-w-7xl mx-auto space-y-8 relative z-10">
 
                 {/* Header */}
                 <header className="flex flex-col md:flex-row items-center justify-between gap-6 p-6 rounded-3xl bg-white/[0.03] border border-white/5">
@@ -226,8 +231,8 @@ export default function Reports() {
                                     key={range}
                                     onClick={() => setDateRange(range)}
                                     className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${dateRange === range
-                                            ? 'bg-emerald-500 text-white'
-                                            : 'text-slate-400 hover:text-white'
+                                        ? 'bg-emerald-500 text-white'
+                                        : 'text-slate-400 hover:text-white'
                                         }`}
                                 >
                                     {range === 'today' ? 'Hoje' : range === 'week' ? 'Semana' : 'Mês'}
@@ -305,8 +310,8 @@ export default function Reports() {
                             {metrics.peakHours.length > 0 ? metrics.peakHours.map((peak, i) => (
                                 <div key={i} className="flex items-center gap-4">
                                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold ${i === 0 ? 'bg-amber-500 text-white' :
-                                            i === 1 ? 'bg-slate-500 text-white' :
-                                                'bg-amber-800 text-white'
+                                        i === 1 ? 'bg-slate-500 text-white' :
+                                            'bg-amber-800 text-white'
                                         }`}>
                                         {i + 1}º
                                     </div>

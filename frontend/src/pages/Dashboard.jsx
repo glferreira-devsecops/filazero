@@ -1,4 +1,4 @@
-import { Activity, BarChart3, Clock, ExternalLink, RefreshCw, Trash2, TrendingUp, Users } from 'lucide-react';
+import { Activity, BarChart3, CheckCircle, Clock, ExternalLink, History, RefreshCw, Trash2, TrendingUp, UserX, Users, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -27,12 +27,24 @@ export default function Dashboard() {
     const completed = tickets.filter(t => t.status === 'done').length;
     const waiting = tickets.filter(t => t.status === 'waiting').length;
     const inService = tickets.filter(t => ['called', 'in_service'].includes(t.status)).length;
+    const noShows = tickets.filter(t => t.status === 'no_show').length;
+    const emergencies = tickets.filter(t => t.priority === 'emergency').length;
 
     // Calculate real average wait time
     const completedTickets = tickets.filter(t => t.status === 'done' && t.startedAt && t.createdAt);
     const avgWait = completedTickets.length > 0
         ? Math.round(completedTickets.reduce((acc, t) => acc + (new Date(t.startedAt) - new Date(t.createdAt)), 0) / completedTickets.length / 60000)
         : 0;
+
+    // Activity Log (done + no_show tickets, sorted by finish time)
+    const activityLog = tickets
+        .filter(t => ['done', 'no_show'].includes(t.status))
+        .sort((a, b) => {
+            const timeA = a.finishedAt || a.noShowAt || a.createdAt;
+            const timeB = b.finishedAt || b.noShowAt || b.createdAt;
+            return new Date(timeB) - new Date(timeA);
+        })
+        .slice(0, 10); // Last 10 activities
 
     // Real Hourly distribution
     const hours = {};
@@ -262,6 +274,64 @@ export default function Dashboard() {
                                 </button>
                             </div>
                         </div>
+                    </div>
+
+                    {/* Activity Log Section */}
+                    <div className="p-6 rounded-3xl bg-white/[0.02] border border-white/5">
+                        <h3 className="text-slate-300 text-lg font-bold mb-4 flex items-center gap-2">
+                            <History size={20} className="text-slate-400" />
+                            Histórico do Dia
+                            {noShows > 0 && (
+                                <span className="ml-auto px-2 py-0.5 rounded bg-red-500/20 text-red-400 text-xs font-bold">
+                                    {noShows} no-show{noShows > 1 ? 's' : ''}
+                                </span>
+                            )}
+                            {emergencies > 0 && (
+                                <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 text-xs font-bold flex items-center gap-1">
+                                    <Zap size={10} /> {emergencies} urgência{emergencies > 1 ? 's' : ''}
+                                </span>
+                            )}
+                        </h3>
+
+                        {activityLog.length === 0 ? (
+                            <p className="text-slate-500 text-sm py-8 text-center">Nenhuma atividade registrada hoje</p>
+                        ) : (
+                            <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                                {activityLog.map(ticket => {
+                                    const isNoShow = ticket.status === 'no_show';
+                                    const time = ticket.finishedAt || ticket.noShowAt;
+                                    const timeStr = time ? new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--:--';
+
+                                    return (
+                                        <div
+                                            key={ticket.id}
+                                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${isNoShow
+                                                    ? 'bg-red-500/5 border-red-500/20'
+                                                    : 'bg-white/[0.02] border-white/5'
+                                                }`}
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <div className={`p-2 rounded-lg ${isNoShow ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400'
+                                                    }`}>
+                                                    {isNoShow ? <UserX size={16} /> : <CheckCircle size={16} />}
+                                                </div>
+                                                <div>
+                                                    <span className="font-bold text-white">#{ticket.number}</span>
+                                                    <span className="text-slate-400 text-sm ml-2">{ticket.patientName || 'Paciente'}</span>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <span className={`text-xs font-bold uppercase ${isNoShow ? 'text-red-400' : 'text-emerald-400'
+                                                    }`}>
+                                                    {isNoShow ? 'Não Compareceu' : 'Finalizado'}
+                                                </span>
+                                                <span className="text-slate-500 text-xs font-mono">{timeStr}</span>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

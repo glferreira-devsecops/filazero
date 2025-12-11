@@ -63,8 +63,11 @@ const normalizeTicket = (ticket) => {
 
 /**
  * Creates a new ticket for a specific clinic.
+ * @param {string} clinicId - Clinic identifier
+ * @param {string} patientName - Patient name (optional)
+ * @param {string} priority - 'normal' | 'priority' | 'emergency' (default: 'normal')
  */
-export const createTicket = async (clinicId, patientName = '') => {
+export const createTicket = async (clinicId, patientName = '', priority = 'normal') => {
     if (!clinicId) throw new Error("Clinic ID is required");
 
     // Force mock for demo/guest (Hackathon mode)
@@ -81,6 +84,7 @@ export const createTicket = async (clinicId, patientName = '') => {
             id: 'mock_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
             number: dbStr.queues[clinicId].length + 1,
             status: 'waiting',
+            priority: priority, // 'normal' | 'priority' | 'emergency'
             clinicId,
             patientName: patientName || generateBrazilianName(),
             createdAt: now,
@@ -312,6 +316,148 @@ export const removeTicket = async (clinicId, ticketId) => {
         console.error('Remove ticket error:', e);
         USE_MOCK = true;
         return removeTicket(clinicId, ticketId);
+    }
+};
+
+/**
+ * Updates a ticket's priority
+ * @param {string} clinicId - Clinic identifier
+ * @param {string} ticketId - Ticket ID
+ * @param {string} priority - 'normal' | 'priority' | 'emergency'
+ */
+export const updateTicketPriority = async (clinicId, ticketId, priority) => {
+    if (clinicId === 'guest' || clinicId === 'demo') {
+        USE_MOCK = true;
+    }
+
+    if (USE_MOCK) {
+        const dbStr = getMockDb();
+        if (!dbStr.queues[clinicId]) return;
+
+        const ticketIdx = dbStr.queues[clinicId].findIndex(t => t.id === ticketId);
+        if (ticketIdx > -1) {
+            dbStr.queues[clinicId][ticketIdx].priority = priority;
+            saveMockDb(dbStr);
+        }
+        return;
+    }
+
+    try {
+        await pb.collection('tickets').update(ticketId, { priority });
+    } catch (e) {
+        console.error('Update priority error:', e);
+        USE_MOCK = true;
+        return updateTicketPriority(clinicId, ticketId, priority);
+    }
+};
+
+/**
+ * Priority weight for sorting (higher = more urgent)
+ */
+const PRIORITY_WEIGHT = {
+    'emergency': 3,
+    'priority': 2,
+    'normal': 1
+};
+
+/**
+ * Sorts tickets by priority (emergency first) then by creation time
+ */
+export const sortByPriority = (tickets) => {
+    return [...tickets].sort((a, b) => {
+        const priorityA = PRIORITY_WEIGHT[a.priority] || 1;
+        const priorityB = PRIORITY_WEIGHT[b.priority] || 1;
+
+        // Higher priority first
+        if (priorityB !== priorityA) {
+            return priorityB - priorityA;
+        }
+
+        // Same priority: earlier creation first
+        return new Date(a.createdAt) - new Date(b.createdAt);
+    });
+};
+
+/**
+ * Search ticket by patient name (fuzzy match)
+ */
+export const searchTicketByName = (clinicId, searchTerm) => {
+    if (!searchTerm || searchTerm.length < 2) return [];
+
+    const dbStr = getMockDb();
+    if (!dbStr.queues[clinicId]) return [];
+
+    const term = searchTerm.toLowerCase().trim();
+    return dbStr.queues[clinicId]
+        .filter(t => t.patientName && t.patientName.toLowerCase().includes(term))
+        .filter(t => ['waiting', 'called', 'in_service', 'paused'].includes(t.status));
+};
+
+/**
+ * Pause a ticket (patient stepped out temporarily)
+ */
+export const pauseTicket = async (clinicId, ticketId) => {
+    if (clinicId === 'guest' || clinicId === 'demo') USE_MOCK = true;
+
+    if (USE_MOCK) {
+        const dbStr = getMockDb();
+        if (!dbStr.queues[clinicId]) return;
+
+        const ticketIdx = dbStr.queues[clinicId].findIndex(t => t.id === ticketId);
+        if (ticketIdx > -1) {
+            dbStr.queues[clinicId][ticketIdx].previousStatus = dbStr.queues[clinicId][ticketIdx].status;
+            dbStr.queues[clinicId][ticketIdx].status = 'paused';
+            dbStr.queues[clinicId][ticketIdx].pausedAt = new Date().toISOString();
+            saveMockDb(dbStr);
+        }
+        return;
+    }
+
+    try {
+        const ticket = await pb.collection('tickets').getOne(ticketId);
+        await pb.collection('tickets').update(ticketId, {
+            previousStatus: ticket.status,
+            status: 'paused',
+            pausedAt: new Date().toISOString()
+        });
+    } catch (e) {
+        console.error('Pause ticket error:', e);
+        USE_MOCK = true;
+        return pauseTicket(clinicId, ticketId);
+    }
+};
+
+/**
+ * Resume a paused ticket
+ */
+export const resumeTicket = async (clinicId, ticketId) => {
+    if (clinicId === 'guest' || clinicId === 'demo') USE_MOCK = true;
+
+    if (USE_MOCK) {
+        const dbStr = getMockDb();
+        if (!dbStr.queues[clinicId]) return;
+
+        const ticketIdx = dbStr.queues[clinicId].findIndex(t => t.id === ticketId);
+        if (ticketIdx > -1) {
+            const ticket = dbStr.queues[clinicId][ticketIdx];
+            dbStr.queues[clinicId][ticketIdx].status = ticket.previousStatus || 'waiting';
+            dbStr.queues[clinicId][ticketIdx].resumedAt = new Date().toISOString();
+            delete dbStr.queues[clinicId][ticketIdx].previousStatus;
+            saveMockDb(dbStr);
+        }
+        return;
+    }
+
+    try {
+        const ticket = await pb.collection('tickets').getOne(ticketId);
+        await pb.collection('tickets').update(ticketId, {
+            status: ticket.previousStatus || 'waiting',
+            resumedAt: new Date().toISOString()
+        });
+    } catch (e) {
+        console.error('Resume ticket error:', e);
+        USE_MOCK = true;
+        return resumeTicket(clinicId, ticketId);
     }
 };
 

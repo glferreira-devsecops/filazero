@@ -1,10 +1,10 @@
-import { AlertTriangle, CheckCircle, Clock, LayoutDashboard, Megaphone, Monitor, Play, QrCode, RefreshCw, User, UserX, X } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Clock, LayoutDashboard, Megaphone, Monitor, Play, QrCode, RefreshCw, Repeat2, Search, User, UserX, X, Zap } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { subscribeToQueue, updateTicketStatus } from '../services/ticketService';
+import { pauseTicket, resumeTicket, searchTicketByName, sortByPriority, subscribeToQueue, updateTicketPriority, updateTicketStatus } from '../services/ticketService';
 
 export default function Reception() {
     const { addToast } = useToast();
@@ -14,6 +14,8 @@ export default function Reception() {
     const [tickets, setTickets] = useState([]);
     const [showQR, setShowQR] = useState(false);
     const [currentTime, setCurrentTime] = useState(new Date());
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
     const navigate = useNavigate();
 
     // Real-time clock
@@ -39,9 +41,29 @@ export default function Reception() {
         }
     };
 
-    const waitingTickets = tickets.filter(t => t.status === 'waiting');
+    // Sort waiting tickets by priority (emergency > priority > normal)
+    const waitingTickets = sortByPriority(tickets.filter(t => t.status === 'waiting'));
     const activeTickets = tickets.filter(t => ['called', 'in_service'].includes(t.status));
     const clinicUrl = `${window.location.origin}/clinic/${clinicId}`;
+
+    // Priority labels and colors
+    const PRIORITY_CONFIG = {
+        emergency: { label: 'URGENTE', bg: 'bg-red-500/20', text: 'text-red-400', border: 'border-red-500/30' },
+        priority: { label: 'PRIORIDADE', bg: 'bg-amber-500/20', text: 'text-amber-400', border: 'border-amber-500/30' },
+        normal: { label: '', bg: '', text: '', border: '' }
+    };
+
+    // Handle priority change
+    const handlePriorityChange = async (ticketId, priority) => {
+        try {
+            await updateTicketPriority(clinicId, ticketId, priority);
+            const priorityLabel = PRIORITY_CONFIG[priority]?.label || priority;
+            addToast(`⚡ Prioridade atualizada: ${priorityLabel || 'Normal'}`, 'info');
+        } catch (e) {
+            console.error(e);
+            addToast('Erro ao atualizar prioridade', 'error');
+        }
+    };
 
     // Calculate real average wait time
     const completedTickets = tickets.filter(t => t.status === 'done' && t.startedAt && t.createdAt);
@@ -68,6 +90,39 @@ export default function Reception() {
         } catch (e) {
             console.error(e);
             addToast('Erro ao marcar no-show', 'error');
+        }
+    };
+
+    // Handle search
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+        if (query.length >= 2) {
+            const results = searchTicketByName(clinicId, query);
+            setSearchResults(results);
+        } else {
+            setSearchResults([]);
+        }
+    };
+
+    // Handle pause
+    const handlePause = async (ticketId) => {
+        try {
+            await pauseTicket(clinicId, ticketId);
+            addToast('⏸️ Ticket pausado', 'info');
+        } catch (e) {
+            console.error(e);
+            addToast('Erro ao pausar', 'error');
+        }
+    };
+
+    // Handle resume
+    const handleResume = async (ticketId) => {
+        try {
+            await resumeTicket(clinicId, ticketId);
+            addToast('▶️ Ticket retomado', 'success');
+        } catch (e) {
+            console.error(e);
+            addToast('Erro ao retomar', 'error');
         }
     };
 
@@ -121,6 +176,54 @@ export default function Reception() {
                     </div>
                 </header>
 
+                {/* Search Bar */}
+                <div className="relative">
+                    <div className="flex items-center gap-3 p-4 rounded-2xl bg-white/[0.03] border border-white/5">
+                        <Search size={20} className="text-slate-400" />
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => handleSearch(e.target.value)}
+                            placeholder="Buscar paciente por nome..."
+                            className="flex-1 bg-transparent border-none text-white placeholder-slate-500 focus:outline-none text-sm"
+                        />
+                        {searchQuery && (
+                            <button onClick={() => handleSearch('')} className="p-1 text-slate-500 hover:text-white">
+                                <X size={16} />
+                            </button>
+                        )}
+                    </div>
+
+                    {/* Search Results Dropdown */}
+                    {searchResults.length > 0 && (
+                        <div className="absolute top-full left-0 right-0 mt-2 p-2 rounded-xl bg-slate-800 border border-white/10 shadow-xl z-20 max-h-[200px] overflow-y-auto">
+                            {searchResults.map(ticket => (
+                                <div
+                                    key={ticket.id}
+                                    className="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors"
+                                >
+                                    <div>
+                                        <span className="font-bold text-white">#{ticket.number}</span>
+                                        <span className="text-slate-300 ml-2">{ticket.patientName}</span>
+                                        <span className={`ml-2 text-xs px-2 py-0.5 rounded ${ticket.status === 'waiting' ? 'bg-amber-500/20 text-amber-400' :
+                                            ticket.status === 'paused' ? 'bg-slate-500/20 text-slate-400' :
+                                                'bg-emerald-500/20 text-emerald-400'
+                                            }`}>
+                                            {ticket.status === 'paused' ? 'PAUSADO' : ticket.status.toUpperCase()}
+                                        </span>
+                                    </div>
+                                    <button
+                                        onClick={() => handleStatusChange(ticket.id, 'called')}
+                                        className="px-3 py-1.5 rounded-lg bg-emerald-500 text-white text-xs font-bold"
+                                    >
+                                        CHAMAR
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
                 {/* Quick Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="p-6 rounded-2xl bg-amber-500/10 border border-amber-500/20 relative overflow-hidden group">
@@ -170,29 +273,69 @@ export default function Reception() {
                                     <p className="font-medium">Nenhum paciente na fila</p>
                                 </div>
                             )}
-                            {waitingTickets.map(ticket => (
-                                <div
-                                    key={ticket.id}
-                                    className="group flex items-center justify-between p-5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.05] border border-white/5 hover:border-amber-500/30 transition-all shadow-sm"
-                                >
-                                    <div>
-                                        <h3 className="text-3xl font-bold text-white group-hover:text-amber-400 transition-colors m-0 leading-none">
-                                            #{ticket.number}
-                                        </h3>
-                                        <div className="flex items-center gap-2 mt-2 text-xs text-slate-400 font-mono">
-                                            <Clock size={12} />
-                                            {formatTime(new Date(ticket.createdAt))}
+                            {waitingTickets.map(ticket => {
+                                const priorityConf = PRIORITY_CONFIG[ticket.priority] || PRIORITY_CONFIG.normal;
+                                const isUrgent = ticket.priority === 'emergency';
+                                const isPriority = ticket.priority === 'priority';
+
+                                return (
+                                    <div
+                                        key={ticket.id}
+                                        className={`group flex items-center justify-between p-5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.05] border transition-all shadow-sm ${isUrgent ? 'border-red-500/30 bg-red-500/5' :
+                                            isPriority ? 'border-amber-500/30 bg-amber-500/5' :
+                                                'border-white/5 hover:border-amber-500/30'
+                                            }`}
+                                    >
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-2">
+                                                <h3 className={`text-3xl font-bold transition-colors m-0 leading-none ${isUrgent ? 'text-red-400' :
+                                                    isPriority ? 'text-amber-400' :
+                                                        'text-white group-hover:text-amber-400'
+                                                    }`}>
+                                                    #{ticket.number}
+                                                </h3>
+                                                {priorityConf.label && (
+                                                    <span className={`flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${priorityConf.bg} ${priorityConf.text} border ${priorityConf.border}`}>
+                                                        {isUrgent && <Zap size={10} />}
+                                                        {priorityConf.label}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div className="flex items-center gap-2 mt-2 text-xs text-slate-400 font-mono">
+                                                <Clock size={12} />
+                                                {formatTime(new Date(ticket.createdAt))}
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center gap-2">
+                                            {/* Priority Toggle */}
+                                            <button
+                                                onClick={() => {
+                                                    const next = ticket.priority === 'normal' ? 'priority' :
+                                                        ticket.priority === 'priority' ? 'emergency' : 'normal';
+                                                    handlePriorityChange(ticket.id, next);
+                                                }}
+                                                className={`p-2 rounded-lg transition-all active:scale-95 ${isUrgent ? 'bg-red-500/20 text-red-400 hover:bg-red-500/30' :
+                                                    isPriority ? 'bg-amber-500/20 text-amber-400 hover:bg-amber-500/30' :
+                                                        'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-amber-400'
+                                                    }`}
+                                                title="Alterar Prioridade (Normal → Prioridade → Urgente)"
+                                            >
+                                                <Zap size={16} />
+                                            </button>
+
+                                            {/* Call Button */}
+                                            <button
+                                                onClick={() => handleStatusChange(ticket.id, 'called')}
+                                                className="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all active:scale-95 flex items-center gap-2"
+                                            >
+                                                <Megaphone size={18} />
+                                                CHAMAR
+                                            </button>
                                         </div>
                                     </div>
-                                    <button
-                                        onClick={() => handleStatusChange(ticket.id, 'called')}
-                                        className="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all active:scale-95 flex items-center gap-2"
-                                    >
-                                        <Megaphone size={18} />
-                                        CHAMAR
-                                    </button>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </section>
 

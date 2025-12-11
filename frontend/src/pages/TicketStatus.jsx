@@ -10,6 +10,9 @@ export default function TicketStatus() {
     const clinicId = sanitizeClinicId(rawClinicId); // Sanitize URL param
 
     const [ticket, setTicket] = useState(null);
+    const [ticketId, setTicketId] = useState(() => localStorage.getItem(`filazero_ticket_${clinicId}`));
+
+    // Position, loading, sound... remain same
     const [position, setPosition] = useState(null);
     const [loading, setLoading] = useState(false);
     const [soundEnabled, setSoundEnabled] = useState(true);
@@ -20,34 +23,52 @@ export default function TicketStatus() {
     // Use ref to track previous status without causing re-renders
     const prevStatusRef = useRef(null);
 
-    // Check if we already have a ticket in localStorage for this clinic
+    // Sync ticketId with localStorage
     useEffect(() => {
-        const storedTicketId = localStorage.getItem(`filazero_ticket_${clinicId}`);
-        if (storedTicketId) {
-            const unsubscribe = subscribeToTicket(clinicId, storedTicketId, (data) => {
-                // Audio alert if status changes to called
-                if (data && data.status === 'called' && prevStatusRef.current !== 'called') {
-                    playAlert();
-                }
-                prevStatusRef.current = data?.status;
-                setTicket(data);
-                if (data && data.status === 'waiting') {
-                    updatePosition(data.number);
-                }
-            });
-            return () => unsubscribe();
+        if (ticketId) {
+            localStorage.setItem(`filazero_ticket_${clinicId}`, ticketId);
+        } else {
+            localStorage.removeItem(`filazero_ticket_${clinicId}`);
         }
-    }, [clinicId]); // Removed ticket from dependencies
+    }, [ticketId, clinicId]);
+
+    // Subscription Effect - Declarative
+    useEffect(() => {
+        if (!ticketId) {
+            setTicket(null);
+            return;
+        }
+
+        const unsubscribe = subscribeToTicket(clinicId, ticketId, (data) => {
+            if (!data) {
+                // Ticket deleted remotely (or not found)
+                setTicketId(null);
+                setTicket(null);
+                return;
+            }
+
+            // Audio alert logic
+            if (data.status === 'called' && prevStatusRef.current !== 'called') {
+                playAlert();
+            }
+            prevStatusRef.current = data.status;
+
+            setTicket(data);
+            if (data.status === 'waiting') {
+                updatePosition(data.number);
+            }
+        });
+
+        // Cleanup subscription on unmount or ticketId change
+        return () => unsubscribe();
+    }, [ticketId, clinicId, soundEnabled]); // Removed position from deps
 
     const playAlert = () => {
         if (!soundEnabled) return;
         try {
             const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-            audio.play().catch(() => { }); // Ignore auto-play errors
-
-            if ('vibrate' in navigator) {
-                navigator.vibrate([200, 100, 200, 100, 200]);
-            }
+            audio.play().catch(() => { });
+            if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
         } catch (e) {
             console.error(e);
         }
@@ -62,18 +83,9 @@ export default function TicketStatus() {
         setLoading(true);
         try {
             const newTicket = await createTicket(clinicId);
-            localStorage.setItem(`filazero_ticket_${clinicId}`, newTicket.id);
-            setTicket(newTicket);
+            setTicket(newTicket); // Optimistic UI
+            setTicketId(newTicket.id); // Triggers subscription effect
             updatePosition(newTicket.number);
-
-            subscribeToTicket(clinicId, newTicket.id, (data) => {
-                if (data && data.status === 'called' && ticket?.status !== 'called') {
-                    playAlert();
-                }
-                setTicket(data);
-                if (data && data.status === 'waiting') updatePosition(data.number);
-            });
-
         } catch (err) {
             console.error(err);
             addToast("Erro ao gerar ticket. Tente novamente.", "error");
@@ -85,19 +97,18 @@ export default function TicketStatus() {
     const handleLeaveQueue = async () => {
         setLeavingQueue(true);
         try {
-            // Remove from mock database
-            if (ticket?.id) {
-                await removeTicket(clinicId, ticket.id);
+            if (ticketId) {
+                await removeTicket(clinicId, ticketId);
             }
-            // Clear localStorage reference
-            localStorage.removeItem(`filazero_ticket_${clinicId}`);
-            setTicket(null);
+            setTicketId(null); // Triggers cleanup and UI reset
             setPosition(null);
             setShowLeaveConfirm(false);
             addToast('👋 Você saiu da fila com sucesso!', 'success');
         } catch (e) {
             console.error('Error leaving queue:', e);
             addToast('Erro ao sair da fila', 'error');
+            // Force exit anyway if server error
+            setTicketId(null);
         } finally {
             setLeavingQueue(false);
         }
@@ -278,8 +289,7 @@ export default function TicketStatus() {
                         <p className="text-slate-400 text-sm mb-6">Obrigado por utilizar o FilaZero!</p>
                         <button
                             onClick={() => {
-                                localStorage.removeItem(`filazero_ticket_${clinicId}`);
-                                setTicket(null);
+                                setTicketId(null);
                                 setPosition(null);
                             }}
                             className="px-8 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl font-bold transition-all border border-white/10"

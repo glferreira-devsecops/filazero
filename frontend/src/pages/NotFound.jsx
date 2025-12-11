@@ -63,13 +63,6 @@ export default function NotFound() {
                     <p className="text-slate-500 text-sm mb-4">Links úteis:</p>
                     <div className="flex flex-wrap justify-center gap-4">
                         <button
-                            onClick={() => navigate('/login')}
-                            className="text-sm text-slate-400 hover:text-emerald-400 transition-colors"
-                        >
-                            Login Admin
-                        </button>
-                        <span className="text-slate-700">•</span>
-                        <button
                             onClick={() => navigate('/clinic/demo')}
                             className="text-sm text-slate-400 hover:text-emerald-400 transition-colors"
                         >
@@ -80,7 +73,7 @@ export default function NotFound() {
                             onClick={() => navigate('/')}
                             className="text-sm text-slate-400 hover:text-emerald-400 transition-colors"
                         >
-                            Landing Page
+                            Página Inicial
                         </button>
                     </div>
                 </div>

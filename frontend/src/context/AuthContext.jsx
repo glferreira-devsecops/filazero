@@ -9,7 +9,6 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState(pb.authStore.model);
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         // Listen for auth state changes
@@ -50,7 +49,7 @@ export function AuthProvider({ children }) {
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     );
 }

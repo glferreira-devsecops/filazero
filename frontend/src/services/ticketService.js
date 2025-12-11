@@ -1,5 +1,9 @@
 import { generateBrazilianName } from '../utils/demoUtils';
+import { createRateLimiter, sanitizePatientName } from '../utils/security';
 import pb from './pocketbase';
+
+// Rate limiter: max 5 tickets per minute per session
+const ticketRateLimiter = createRateLimiter(5, 60000);
 
 // Flag to use mock storage when PocketBase is not available
 let USE_MOCK = false;
@@ -70,6 +74,14 @@ const normalizeTicket = (ticket) => {
 export const createTicket = async (clinicId, patientName = '', priority = 'normal') => {
     if (!clinicId) throw new Error("Clinic ID is required");
 
+    // Rate limiting to prevent spam
+    if (!ticketRateLimiter()) {
+        throw new Error("Muitas senhas criadas. Aguarde um momento.");
+    }
+
+    // Sanitize patient name
+    const safeName = patientName ? sanitizePatientName(patientName) : '';
+
     // Force mock for demo/guest (Hackathon mode)
     if (clinicId === 'guest' || clinicId === 'demo') {
         USE_MOCK = true;
@@ -84,9 +96,9 @@ export const createTicket = async (clinicId, patientName = '', priority = 'norma
             id: 'mock_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
             number: dbStr.queues[clinicId].length + 1,
             status: 'waiting',
-            priority: priority, // 'normal' | 'priority' | 'emergency'
+            priority: priority,
             clinicId,
-            patientName: patientName || generateBrazilianName(),
+            patientName: safeName || generateBrazilianName(),
             createdAt: now,
             channel: 'web'
         };

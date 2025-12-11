@@ -1,18 +1,19 @@
 import { Activity, Clock, Expand, Minimize, Volume2, VolumeX } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { subscribeToQueue } from '../services/ticketService';
 
 export default function RoomPanel() {
     const { currentUser } = useAuth();
+    const { settings, updateSettings } = useSettings();
     const clinicId = currentUser?.id;
 
     const [calledTicket, setCalledTicket] = useState(null);
     const [history, setHistory] = useState([]);
     const [currentTime, setCurrentTime] = useState(new Date());
     const [isFullscreen, setIsFullscreen] = useState(false);
-    const [voiceEnabled, setVoiceEnabled] = useState(true);
+    // Removed local voiceEnabled in favor of settings.voiceEnabled
 
     // Real-time clock
     useEffect(() => {
@@ -20,22 +21,42 @@ export default function RoomPanel() {
         return () => clearInterval(timer);
     }, []);
 
+    // Optimized Audio ref to avoid garbage collection churn
+    const audioRef = useRef(new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'));
+
+    useEffect(() => {
+        // Preload audio
+        audioRef.current.volume = 0.7;
+        audioRef.current.load();
+
+        // Cleanup speech on unmount
+        return () => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+        };
+    }, []);
+
     // Voice announcement using Web Speech API
     const announceTicket = (number) => {
-        if (!voiceEnabled || !('speechSynthesis' in window)) return;
+        if (!settings.voiceEnabled || !('speechSynthesis' in window)) return;
+
+        // Cancel previous utterances to avoid queue pileup
+        window.speechSynthesis.cancel();
 
         const utterance = new SpeechSynthesisUtterance(`Senha número ${number}, dirija-se ao guichê`);
         utterance.lang = 'pt-BR';
         utterance.rate = 0.9;
         utterance.pitch = 1;
-        speechSynthesis.speak(utterance);
+        window.speechSynthesis.speak(utterance);
     };
 
     // Audio alert
     const playRoomAlert = () => {
+        if (!settings.soundEnabled) return;
         try {
-            const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
-            audio.volume = 0.7;
+            const audio = audioRef.current;
+            audio.currentTime = 0; // Reset to start
             audio.play().catch(e => console.error("Audio error:", e));
         } catch (e) {
             console.error("Failed to play audio:", e);
@@ -78,7 +99,7 @@ export default function RoomPanel() {
             setHistory(others.slice(-5));
         });
         return () => unsubscribe();
-    }, [clinicId, voiceEnabled]);
+    }, [clinicId, settings.voiceEnabled, settings.soundEnabled]);
 
     const formatTime = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     const formatDate = (date) => date.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
@@ -118,11 +139,11 @@ export default function RoomPanel() {
                             <span className="text-xs font-bold uppercase">Test</span>
                         </button>
                         <button
-                            onClick={() => setVoiceEnabled(!voiceEnabled)}
+                            onClick={() => updateSettings({ voiceEnabled: !settings.voiceEnabled })}
                             className="p-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all"
-                            title={voiceEnabled ? 'Desativar voz' : 'Ativar voz'}
+                            title={settings.voiceEnabled ? 'Desativar voz' : 'Ativar voz'}
                         >
-                            {voiceEnabled ? <Volume2 size={24} /> : <VolumeX size={24} />}
+                            {settings.voiceEnabled ? <Volume2 size={24} /> : <VolumeX size={24} />}
                         </button>
                         <button
                             onClick={toggleFullscreen}

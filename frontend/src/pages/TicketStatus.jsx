@@ -2,7 +2,7 @@ import { AlertCircle, Bell, BellOff, CheckCircle, Clock, LogOut, Ticket, Users, 
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
-import { createTicket, getQueuePosition, removeTicket, subscribeToTicket } from '../services/ticketService';
+import { createTicket, removeTicket } from '../services/ticketService';
 import { sanitizeClinicId } from '../utils/security';
 
 export default function TicketStatus() {
@@ -350,6 +350,7 @@ export default function TicketStatus() {
                             >
                                 Cancelar
                             </button>
+                            <PrintTicket ticket={ticket} />
                             <button
                                 onClick={handleLeaveQueue}
                                 disabled={leavingQueue}

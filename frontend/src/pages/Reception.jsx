@@ -9,6 +9,7 @@ import { pauseTicket, resumeTicket, searchTicketByName, sortByPriority, subscrib
 export default function Reception() {
     const { addToast } = useToast();
     const { currentUser } = useAuth();
+    const { settings } = useSettings();
     const clinicId = currentUser?.id;
 
     const [tickets, setTickets] = useState([]);
@@ -359,7 +360,7 @@ export default function Reception() {
                             )}
                             {activeTickets.map(ticket => {
                                 const calledMins = getCalledDuration(ticket.calledAt);
-                                const isOverdue = ticket.status === 'called' && calledMins >= 3;
+                                const isOverdue = ticket.status === 'called' && calledMins >= (settings?.noShowTimeout || 5);
 
                                 return (
                                     <div

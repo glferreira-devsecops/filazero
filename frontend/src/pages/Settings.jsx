@@ -1,9 +1,9 @@
 import { Bell, Building2, Clock, LogOut, Save, Settings as SettingsIcon, Shield, User } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
 import { useToast } from '../context/ToastContext';
-import { secureStorage } from '../utils/security';
 
 /**
  * Settings Page
@@ -15,54 +15,16 @@ export default function Settings() {
     const navigate = useNavigate();
     const clinicId = currentUser?.id;
 
-    // Settings state
-    const [settings, setSettings] = useState({
-        // Clinic Info
-        clinicName: 'Clínica Demo',
-        clinicAddress: 'Rua Exemplo, 123 - Centro',
-        clinicPhone: '(11) 99999-9999',
-
-        // Operation Hours
-        openTime: '08:00',
-        closeTime: '18:00',
-        lunchStart: '12:00',
-        lunchEnd: '13:00',
-        workDays: ['seg', 'ter', 'qua', 'qui', 'sex'],
-
-        // Notifications
-        soundEnabled: true,
-        voiceEnabled: true,
-        browserNotifications: false,
-
-        // Appearance
-        theme: 'dark',
-        language: 'pt-BR',
-
-        // Queue Settings
-        maxWaitTime: 60, // minutes
-        noShowTimeout: 5, // minutes
-        autoCallNextDelay: 30, // seconds
-
-        // Security
-        requirePatientName: false,
-        enableAnonymousTickets: true
-    });
-
+    // Use global settings state
+    const { settings, updateSettings } = useSettings();
     const [saving, setSaving] = useState(false);
 
-    // Load settings from localStorage
-    useEffect(() => {
-        const saved = secureStorage.get(`filazero_settings_${clinicId}`);
-        if (saved) {
-            setSettings(prev => ({ ...prev, ...saved }));
-        }
-    }, [clinicId]);
-
-    // Save settings
+    // Save settings (already handled by updateSettings, but we can simulate a "save" action for UX)
     const handleSave = async () => {
         setSaving(true);
         try {
-            secureStorage.set(`filazero_settings_${clinicId}`, settings);
+            // In a real app, we might also sync to backend here
+            await new Promise(r => setTimeout(r, 500));
             addToast('✅ Configurações salvas!', 'success');
         } catch (e) {
             addToast('Erro ao salvar', 'error');
@@ -71,19 +33,17 @@ export default function Settings() {
         }
     };
 
-    // Update setting
-    const updateSetting = (key, value) => {
-        setSettings(prev => ({ ...prev, [key]: value }));
+    // Update setting wrapper
+    const handleUpdate = (key, value) => {
+        updateSettings({ [key]: value });
     };
 
     // Toggle work day
     const toggleWorkDay = (day) => {
-        setSettings(prev => ({
-            ...prev,
-            workDays: prev.workDays.includes(day)
-                ? prev.workDays.filter(d => d !== day)
-                : [...prev.workDays, day]
-        }));
+        handleUpdate('workDays', settings.workDays.includes(day)
+            ? settings.workDays.filter(d => d !== day)
+            : [...settings.workDays, day]
+        );
     };
 
     const WORK_DAYS = [
@@ -179,20 +139,20 @@ export default function Settings() {
                         <InputField
                             label="Nome da Clínica"
                             value={settings.clinicName}
-                            onChange={(v) => updateSetting('clinicName', v)}
+                            onChange={(v) => handleUpdate('clinicName', v)}
                             placeholder="Nome da sua clínica"
                         />
                         <InputField
                             label="Telefone"
                             value={settings.clinicPhone}
-                            onChange={(v) => updateSetting('clinicPhone', v)}
+                            onChange={(v) => handleUpdate('clinicPhone', v)}
                             placeholder="(11) 99999-9999"
                         />
                     </div>
                     <InputField
                         label="Endereço"
                         value={settings.clinicAddress}
-                        onChange={(v) => updateSetting('clinicAddress', v)}
+                        onChange={(v) => handleUpdate('clinicAddress', v)}
                         placeholder="Endereço completo"
                     />
                 </Section>
@@ -203,25 +163,25 @@ export default function Settings() {
                         <InputField
                             label="Abertura"
                             value={settings.openTime}
-                            onChange={(v) => updateSetting('openTime', v)}
+                            onChange={(v) => handleUpdate('openTime', v)}
                             type="time"
                         />
                         <InputField
                             label="Fechamento"
                             value={settings.closeTime}
-                            onChange={(v) => updateSetting('closeTime', v)}
+                            onChange={(v) => handleUpdate('closeTime', v)}
                             type="time"
                         />
                         <InputField
                             label="Início Almoço"
                             value={settings.lunchStart}
-                            onChange={(v) => updateSetting('lunchStart', v)}
+                            onChange={(v) => handleUpdate('lunchStart', v)}
                             type="time"
                         />
                         <InputField
                             label="Fim Almoço"
                             value={settings.lunchEnd}
-                            onChange={(v) => updateSetting('lunchEnd', v)}
+                            onChange={(v) => handleUpdate('lunchEnd', v)}
                             type="time"
                         />
                     </div>
@@ -235,8 +195,8 @@ export default function Settings() {
                                     key={key}
                                     onClick={() => toggleWorkDay(key)}
                                     className={`px-4 py-2 rounded-xl font-bold text-sm transition-all ${settings.workDays.includes(key)
-                                            ? 'bg-emerald-500 text-white'
-                                            : 'bg-white/5 text-slate-400 hover:bg-white/10'
+                                        ? 'bg-emerald-500 text-white'
+                                        : 'bg-white/5 text-slate-400 hover:bg-white/10'
                                         }`}
                                 >
                                     {label}
@@ -252,19 +212,19 @@ export default function Settings() {
                         label="Som de Alerta"
                         description="Toca som quando um paciente é chamado"
                         checked={settings.soundEnabled}
-                        onChange={(v) => updateSetting('soundEnabled', v)}
+                        onChange={(v) => handleUpdate('soundEnabled', v)}
                     />
                     <Toggle
                         label="Anúncio por Voz"
                         description="Anuncia o número da senha por voz"
                         checked={settings.voiceEnabled}
-                        onChange={(v) => updateSetting('voiceEnabled', v)}
+                        onChange={(v) => handleUpdate('voiceEnabled', v)}
                     />
                     <Toggle
                         label="Notificações do Navegador"
                         description="Receba notificações mesmo com a aba minimizada"
                         checked={settings.browserNotifications}
-                        onChange={(v) => updateSetting('browserNotifications', v)}
+                        onChange={(v) => handleUpdate('browserNotifications', v)}
                     />
                 </Section>
 
@@ -276,7 +236,7 @@ export default function Settings() {
                             <input
                                 type="number"
                                 value={settings.maxWaitTime}
-                                onChange={(e) => updateSetting('maxWaitTime', parseInt(e.target.value))}
+                                onChange={(e) => handleUpdate('maxWaitTime', parseInt(e.target.value))}
                                 min="15"
                                 max="180"
                                 className="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-white focus:outline-none focus:border-emerald-500/50"
@@ -287,7 +247,7 @@ export default function Settings() {
                             <input
                                 type="number"
                                 value={settings.noShowTimeout}
-                                onChange={(e) => updateSetting('noShowTimeout', parseInt(e.target.value))}
+                                onChange={(e) => handleUpdate('noShowTimeout', parseInt(e.target.value))}
                                 min="1"
                                 max="15"
                                 className="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-white focus:outline-none focus:border-emerald-500/50"
@@ -298,7 +258,7 @@ export default function Settings() {
                             <input
                                 type="number"
                                 value={settings.autoCallNextDelay}
-                                onChange={(e) => updateSetting('autoCallNextDelay', parseInt(e.target.value))}
+                                onChange={(e) => handleUpdate('autoCallNextDelay', parseInt(e.target.value))}
                                 min="0"
                                 max="120"
                                 className="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 text-white focus:outline-none focus:border-emerald-500/50"
@@ -310,13 +270,13 @@ export default function Settings() {
                         label="Exigir Nome do Paciente"
                         description="Pacientes devem informar o nome ao retirar senha"
                         checked={settings.requirePatientName}
-                        onChange={(v) => updateSetting('requirePatientName', v)}
+                        onChange={(v) => handleUpdate('requirePatientName', v)}
                     />
                     <Toggle
                         label="Permitir Senhas Anônimas"
                         description="Pacientes podem retirar senha sem identificação"
                         checked={settings.enableAnonymousTickets}
-                        onChange={(v) => updateSetting('enableAnonymousTickets', v)}
+                        onChange={(v) => handleUpdate('enableAnonymousTickets', v)}
                     />
                 </Section>
 

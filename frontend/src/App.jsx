@@ -39,51 +39,24 @@ function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <ToastProvider>
-          <Router>
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Landing />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/clinic/:clinicId" element={<TicketStatus />} />
+        <SettingsProvider>
+          <ToastProvider>
+            <Route path="/admin" element={
+              <Reports />
+              </RequireAuth>
+            } />
 
-              {/* Protected Routes */}
-              <Route path="/admin" element={
-                <RequireAuth>
-                  <Dashboard />
-                </RequireAuth>
-              } />
-              <Route path="/reception" element={
-                <RequireAuth>
-                  <Reception />
-                </RequireAuth>
-              } />
-              <Route path="/panel" element={
-                <RequireAuth>
-                  <RoomPanel />
-                </RequireAuth>
-              } />
-              <Route path="/settings" element={
-                <RequireAuth>
-                  <Settings />
-                </RequireAuth>
-              } />
-              <Route path="/reports" element={
-                <RequireAuth>
-                  <Reports />
-                </RequireAuth>
-              } />
+          {/* 404 Catch-all */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
 
-              {/* 404 Catch-all */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-
-            {/* Demo Mode Indicator - only visible when logged as guest */}
-            <DemoModeBadge />
-          </Router>
-        </ToastProvider>
-      </AuthProvider>
-    </ErrorBoundary>
+        {/* Demo Mode Indicator - only visible when logged as guest */}
+        <DemoModeBadge />
+      </Router>
+    </ToastProvider>
+    </SettingsProvider >
+      </AuthProvider >
+    </ErrorBoundary >
   );
 }
 

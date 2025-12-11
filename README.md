@@ -107,7 +107,15 @@
 - **Horário de Funcionamento** - Abertura, fechamento, almoço
 - **Notificações** - Som, voz, push notifications
 - **Fila** - Timeout, auto-chamar próximo
-- **Segurança** - Exigir nome, senhas anônimas
+- **Segurança** - Exigir nome, senhas anônimas, Rate Limiting
+- **Impressão** - Geração de tickets físicos com data/hora e QR Code
+
+### ♿ Acessibilidade (a11y)
+
+- **Skip Links** - Navegação por teclado otimizada
+- **ARIA Labels** - Suporte a leitores de tela
+- **Contraste** - Cores verificadas para legibilidade
+- **Responsivo** - Funciona em qualquer zoom
 
 ---
 

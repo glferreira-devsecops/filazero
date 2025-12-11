@@ -139,11 +139,18 @@ export default function Dashboard() {
                     <div className="flex items-center gap-3">
                         <button onClick={() => navigate('/reception')} className="group flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-slate-300 hover:text-white transition-all">
                             <ExternalLink size={16} />
-                            <span className="font-semibold text-sm">Abrir Recepção</span>
+                            <span className="font-semibold text-sm">Recepção</span>
                         </button>
                         <button onClick={() => navigate('/panel')} className="group flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-slate-300 hover:text-white transition-all">
                             <ExternalLink size={16} />
                             <span className="font-semibold text-sm">Painel TV</span>
+                        </button>
+                        <button onClick={() => navigate('/reports')} className="group flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 text-blue-300 hover:text-white transition-all">
+                            <BarChart3 size={16} />
+                            <span className="font-semibold text-sm">Relatórios</span>
+                        </button>
+                        <button onClick={() => navigate('/settings')} className="group p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-slate-300 hover:text-white transition-all">
+                            <Settings size={18} />
                         </button>
                     </div>
                 </header>
@@ -306,8 +313,8 @@ export default function Dashboard() {
                                         <div
                                             key={ticket.id}
                                             className={`flex items-center justify-between p-3 rounded-xl border transition-all ${isNoShow
-                                                    ? 'bg-red-500/5 border-red-500/20'
-                                                    : 'bg-white/[0.02] border-white/5'
+                                                ? 'bg-red-500/5 border-red-500/20'
+                                                : 'bg-white/[0.02] border-white/5'
                                                 }`}
                                         >
                                             <div className="flex items-center gap-3">

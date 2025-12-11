@@ -1,4 +1,4 @@
-import { AlertCircle, Bell, BellOff, CheckCircle, Clock, Ticket, Users, Volume2 } from 'lucide-react';
+import { AlertCircle, Bell, BellOff, CheckCircle, Clock, LogOut, Ticket, Users, Volume2, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';

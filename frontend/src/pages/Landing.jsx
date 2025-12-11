@@ -1,4 +1,4 @@
-import { ArrowRight, Check, ChevronDown, ChevronRight, Clock, Github, Layout, Linkedin, Mail, Monitor, Play, QrCode, ShieldCheck, Smartphone, Sparkles, Ticket, Users, Volume2, Zap } from 'lucide-react';
+import { ArrowRight, Check, ChevronDown, ChevronRight, Clock, Github, Layout, Linkedin, Mail, Monitor, MousePointerClick, Play, QrCode, ShieldCheck, Smartphone, Sparkles, Ticket, Users, Volume2, Zap } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

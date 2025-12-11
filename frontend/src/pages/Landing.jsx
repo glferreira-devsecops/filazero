@@ -316,6 +316,34 @@ export default function Landing() {
                                 </div>
                             )}
                         </div>
+
+                        {/* Phone Mockup Preview */}
+                        <div className="mt-6 pt-6 border-t border-white/5">
+                            <p className="text-center text-slate-500 text-xs uppercase tracking-wider mb-4">Prévia do Sistema</p>
+                            <div className="flex justify-center gap-4">
+                                {/* Ticket Preview */}
+                                <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-4 shadow-xl border border-white/10 transform hover:scale-105 transition-transform">
+                                    <div className="text-center">
+                                        <p className="text-slate-400 text-[10px] uppercase tracking-widest mb-1">Sua Senha</p>
+                                        <div className="text-4xl font-black text-white animate-pulse">42</div>
+                                        <span className="inline-block mt-1 px-2 py-0.5 bg-amber-500/20 text-amber-400 text-[10px] font-bold rounded-full">
+                                            AGUARDANDO
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Position Preview */}
+                                <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-4 shadow-xl border border-white/10 transform hover:scale-105 transition-transform">
+                                    <div className="text-center">
+                                        <div className="text-3xl font-black text-emerald-400">3</div>
+                                        <p className="text-slate-500 text-[10px]">na frente</p>
+                                        <div className="w-8 h-px bg-white/10 mx-auto my-1"></div>
+                                        <div className="text-xl font-bold text-white">~15</div>
+                                        <p className="text-slate-500 text-[10px]">minutos</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>
